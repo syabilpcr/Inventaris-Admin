@@ -4,6 +4,7 @@
 <style>
     body {
         background: #f9f3ef !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .page-header-custom {
@@ -29,6 +30,40 @@
     .table-custom thead {
         background: #fefcfb;
         color: #1b3c53;
+    }
+
+    /* Thumbnail Style */
+    .img-maintenance-container {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 2px solid #e9e1d9;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .img-maintenance-container:hover {
+        transform: scale(1.1);
+        border-color: #456882;
+    }
+
+    .img-maintenance-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image-placeholder {
+        width: 60px;
+        height: 60px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #d2c1b6;
+        border: 2px dashed #e9e1d9;
     }
 
     .badge-price {
@@ -62,6 +97,7 @@
                     <tr>
                         <th>NO</th>
                         <th>Tanggal</th>
+                        <th>Foto</th>
                         <th>Aset</th>
                         <th>Tindakan</th>
                         <th>Biaya</th>
@@ -70,16 +106,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php $counter = 1; @endphp
-                    @foreach($pemeliharaan as $p)
+                    @foreach($pemeliharaan as $index => $p)
                     <tr>
-                        <td>{{ $counter++ }}</td>
+                        <td>{{ $index + 1 }}</td>
                         <td>{{ \Carbon\Carbon::parse($p->tanggal)->format('d/m/Y') }}</td>
+
+                        {{-- KOLOM FOTO --}}
+                        <td>
+                            @php
+                            // Mencari foto di tabel media dengan ref_table 'pemeliharaan'
+                            $photo = $p->media->where('ref_table', 'pemeliharaan')->first();
+                            @endphp
+
+                            @if($photo)
+                            <div class="img-maintenance-container" data-bs-toggle="modal" data-bs-target="#modalPhoto{{ $p->pemeliharaan_id }}">
+                                <img src="{{ asset('storage/' . $photo->file_name) }}" alt="Foto Pemeliharaan">
+                            </div>
+
+                            <div class="modal fade" id="modalPhoto{{ $p->pemeliharaan_id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-0 bg-transparent">
+                                        <div class="modal-body p-0 text-center">
+                                            <img src="{{ asset('storage/' . $photo->file_name) }}" class="img-fluid rounded shadow-lg">
+                                            <div class="mt-3">
+                                                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @else
+                            <div class="no-image-placeholder">
+                                <i class="bi bi-camera text-muted"></i>
+                            </div>
+                            @endif
+                        </td>
+
                         <td>
                             <div class="fw-bold">{{ $p->aset->nama_aset }}</div>
                             <small class="text-muted">{{ $p->aset->kode_aset }}</small>
                         </td>
-                        <td>{{ Str::limit($p->tindakan, 50) }}</td>
+                        <td>{{ Str::limit($p->tindakan, 40) }}</td>
                         <td><span class="badge-price">Rp {{ number_format($p->biaya, 0, ',', '.') }}</span></td>
                         <td>{{ $p->pelaksana }}</td>
                         <td class="text-center">
