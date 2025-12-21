@@ -166,10 +166,30 @@
         padding: 15px 20px;
         margin-bottom: 25px;
     }
+
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .preview-item {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid #d2c1b6;
+        height: 120px;
+    }
+
+    .preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 </style>
 
 <div class="container-fluid px-4">
-
     {{-- HEADER --}}
     <div class="page-header-custom">
         <div>
@@ -181,185 +201,124 @@
         </div>
     </div>
 
-    {{-- CARD CONTENT --}}
     <div class="card-soft">
-        {{-- TAMPILKAN PERINGATAN JIKA TIDAK ADA KATEGORI --}}
-        @if(!isset($kategori) || $kategori->isEmpty())
-        <div class="alert-warning-custom">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            <strong>Peringatan:</strong> Tidak ada kategori aset yang tersedia.
-            <a href="{{ route('kategori.create') }}" class="text-white text-decoration-underline">
-                Tambahkan kategori terlebih dahulu.
-            </a>
-        </div>
-        @endif
-
-        @if($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-
-        @if(session('success'))
-        <div class="alert-custom">
-            <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
-        </div>
-        @endif
-
-        <form action="{{ route('aset.store') }}" method="POST">
+        {{-- Form Start - Menambahkan Enctype --}}
+        <form action="{{ route('aset.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            {{-- INFORMASI DASAR --}}
-            <div class="form-section">
-                <h5><i class="bi bi-info-circle me-2"></i>Informasi Dasar</h5>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label-custom required-field">Kategori Aset</label>
-                        <select name="kategori_id" class="form-control form-control-custom" required>
-                            <option value="">Pilih Kategori</option>
-                            @foreach ($kategori as $k)
-                            <option value="{{ $k->kategori_id }}"
-                                {{ old('kategori_id') == $k->kategori_id ? 'selected' : '' }}>
-                                {{ $k->nama }}
-                            </option>
-                            @endforeach
-                        </select>
-
-                        @error('kategori_id')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
+            <div class="row">
+                <div class="col-lg-8">
+                    {{-- INFORMASI DASAR --}}
+                    <div class="form-section">
+                        <h5><i class="bi bi-info-circle me-2"></i>Informasi Dasar</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom required-field">Kategori Aset</label>
+                                <select name="kategori_id" class="form-control form-control-custom" required>
+                                    <option value="">Pilih Kategori</option>
+                                    @foreach ($kategori as $k)
+                                    <option value="{{ $k->kategori_id }}" {{ old('kategori_id') == $k->kategori_id ? 'selected' : '' }}>
+                                        {{ $k->nama }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom required-field">Kode Aset</label>
+                                <input type="text" name="kode_aset" class="form-control form-control-custom" value="{{ old('kode_aset') }}" placeholder="AST-001" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom required-field">Nama Aset</label>
+                            <input type="text" name="nama_aset" class="form-control form-control-custom" value="{{ old('nama_aset') }}" placeholder="Masukkan nama aset" required>
+                        </div>
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label-custom required-field">Kode Aset</label>
-                        <input type="text" name="kode_aset"
-                            class="form-control form-control-custom"
-                            value="{{ old('kode_aset') }}"
-                            placeholder="Contoh: AST-001" required>
-
-                        @error('kode_aset')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
+                    {{-- NILAI & KONDISI --}}
+                    <div class="form-section">
+                        <h5><i class="bi bi-currency-dollar me-2"></i>Nilai & Kondisi</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label-custom required-field">Tanggal Perolehan</label>
+                                <input type="date" name="tgl_perolehan" class="form-control form-control-custom" value="{{ old('tgl_perolehan', date('Y-m-d')) }}" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label-custom required-field">Nilai Perolehan (Rp)</label>
+                                <input type="number" name="nilai_perolehan" class="form-control form-control-custom" value="{{ old('nilai_perolehan') }}" placeholder="0" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label-custom required-field">Kondisi Aset</label>
+                                <select name="kondisi" class="form-control form-control-custom" required>
+                                    <option value="Sangat Baik">Sangat Baik</option>
+                                    <option value="Baik">Baik</option>
+                                    <option value="Rusak Ringan">Rusak Ringan</option>
+                                    <option value="Rusak Berat">Rusak Berat</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label-custom required-field">Nama Aset</label>
-                    <input type="text" name="nama_aset"
-                        class="form-control form-control-custom"
-                        value="{{ old('nama_aset') }}"
-                        placeholder="Masukkan nama aset" required>
+                {{-- UPLOAD FOTO SECTION --}}
+                <div class="col-lg-4">
+                    <div class="form-section h-100">
+                        <h5><i class="bi bi-camera me-2"></i>Foto Aset</h5>
+                        <div class="preview-container" id="dropzone">
+                            <i class="bi bi-cloud-arrow-up fs-1 mb-2" id="icon-upload" style="color: #d2c1b6;"></i>
+                            <p class="mb-2" id="text-upload">Pilih atau Drag foto aset</p>
 
-                    @error('nama_aset')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
+                            <div class="file-input-custom">
+                                <button type="button" class="btn btn-secondary-custom btn-sm">Browse Files</button>
+                                <input type="file" name="foto_aset[]" id="foto_aset" multiple accept="image/*" onchange="previewMultipleImages(event)">
+                            </div>
+                            <small class="help-text d-block mt-2">Bisa pilih lebih dari 1 foto (Max 2MB/foto)</small>
+                        </div>
 
-            {{-- NILAI & KONDISI --}}
-            <div class="form-section">
-                <h5><i class="bi bi-currency-dollar me-2"></i>Nilai & Kondisi</h5>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label-custom required-field">Tanggal Perolehan</label>
-                        <input type="date" name="tgl_perolehan"
-                            class="form-control form-control-custom"
-                            value="{{ old('tgl_perolehan', date('Y-m-d')) }}" required>
-
-                        @error('tgl_perolehan')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label-custom required-field">Nilai Perolehan</label>
-                        <input type="number" name="nilai_perolehan"
-                            class="form-control form-control-custom"
-                            value="{{ old('nilai_perolehan') }}"
-                            placeholder="0" required>
-
-                        @error('nilai_perolehan')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label-custom required-field">Kondisi Aset</label>
-                        <select name="kondisi" class="form-control form-control-custom" required>
-                            <option value="">Pilih Kondisi</option>
-                            <option value="Sangat Baik" {{ old('kondisi') == 'Sangat Baik' ? 'selected' : '' }}>Sangat Baik</option>
-                            <option value="Baik" {{ old('kondisi') == 'Baik' ? 'selected' : '' }}>Baik</option>
-                            <option value="Rusak Ringan" {{ old('kondisi') == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
-                            <option value="Rusak Berat" {{ old('kondisi') == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat</option>
-                        </select>
-
-                        @error('kondisi')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
+                        {{-- Grid Preview --}}
+                        <div class="preview-grid" id="preview-grid"></div>
                     </div>
                 </div>
             </div>
 
-            {{-- TOMBOL --}}
             <div class="d-flex justify-content-between mt-4 pt-3 border-top">
                 <a href="{{ route('aset.index') }}" class="btn btn-secondary-custom">
                     <i class="bi bi-arrow-left me-2"></i> Kembali
                 </a>
-
                 <button type="submit" class="btn btn-primary-custom">
                     <i class="bi bi-check-circle me-2"></i> Simpan Aset
                 </button>
             </div>
         </form>
-
     </div>
 </div>
 
 <script>
-    function previewImage(event) {
-        const preview = document.getElementById('preview');
-        const placeholder = document.getElementById('previewPlaceholder');
-        const file = event.target.files[0];
+    function previewMultipleImages(event) {
+        const grid = document.getElementById('preview-grid');
+        const icon = document.getElementById('icon-upload');
+        const text = document.getElementById('text-upload');
+        const files = event.target.files;
 
-        if (file) {
-            const reader = new FileReader();
+        grid.innerHTML = ''; // Reset preview
 
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                placeholder.style.display = 'none';
-            }
+        if (files.length > 0) {
+            icon.style.display = 'none';
+            text.style.display = 'none';
 
-            reader.readAsDataURL(file);
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `<img src="${e.target.result}">`;
+                    grid.appendChild(div);
+                }
+                reader.readAsDataURL(file);
+            });
         } else {
-            preview.style.display = 'none';
-            placeholder.style.display = 'block';
+            icon.style.display = 'block';
+            text.style.display = 'block';
         }
     }
-
-    // Format input nilai perolehan
-    document.querySelector('input[name="nilai_perolehan"]').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/[^\d]/g, '');
-        if (value) {
-            e.target.value = parseInt(value).toLocaleString('id-ID');
-        }
-    });
-
-    // Set today's date as default for tanggal perolehan
-    document.addEventListener('DOMContentLoaded', function() {
-        const today = new Date().toISOString().split('T')[0];
-        const dateInput = document.querySelector('input[name="tgl_perolehan"]');
-
-        if (!dateInput.value) {
-            dateInput.value = today;
-        }
-    });
 </script>
-
 @endsection

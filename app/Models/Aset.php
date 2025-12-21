@@ -26,4 +26,9 @@ class Aset extends Model
     {
         return $this->belongsTo(KategoriAset::class, 'kategori_id', 'kategori_id');
     }
+
+    public function media()
+    {
+        return $this->hasMany(Media::class, 'ref_id', 'aset_id')->where('ref_table', 'aset');
+    }
 }

@@ -24,7 +24,7 @@
         background: white;
         border-radius: 18px;
         padding: 25px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         border: 1px solid #e9e1d9;
     }
 
@@ -125,7 +125,7 @@
         border-radius: 15px;
         padding: 25px;
         margin-bottom: 25px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         border-left: 4px solid #456882;
     }
 
@@ -190,7 +190,7 @@
         </div>
     </div>
 
-     <div class="d-flex justify-content-between align-items-center flex-wrap mb-4 animate-header">
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4 animate-header">
         <div class="mb-2">
             <h2 class="fw-bold mb-0" style="color: #1b3c53;">
                 <i class="bi bi-list-ul me-2" style="color: #456882;"></i>Daftar Data
@@ -235,15 +235,15 @@
         </div>
 
         @if(session('success'))
-            <div class="alert-custom">
-                <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
-            </div>
+        <div class="alert-custom">
+            <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
+        </div>
         @endif
 
         @if(session('error'))
-            <div class="alert alert-danger">
-                <i class="bi bi-exclamation-circle me-2"></i> {{ session('error') }}
-            </div>
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-circle me-2"></i> {{ session('error') }}
+        </div>
         @endif
 
         <div class="table-responsive">
@@ -251,6 +251,7 @@
                 <thead>
                     <tr>
                         <th>NO</th>
+                        <th>FOTO</th>
                         <th>Kode Aset</th>
                         <th>Nama Aset</th>
                         <th>Kategori</th>
@@ -264,84 +265,104 @@
                 <tbody>
                     @php $counter = 1; @endphp
                     @if($aset->count() > 0)
-                        @foreach ($aset as $item)
-                        <tr>
-                            <td class="fw-bold" style="color: #1b3c53;">{{ $counter++ }}</td>
-                            <td style="color: #456882; font-weight: 600;">{{ $item->kode_aset }}</td>
-                            <td style="color: #1b3c53; font-weight: 500;">{{ $item->nama_aset }}</td>
-                            <td>
-                                @if($item->kategori)
-                                    <span class="kategori-badge">
-                                        {{ $item->kategori->nama }}
-                                    </span>
-                                @else
-                                    <span class="kategori-badge" style="background: #f8d7da; color: #721c24;">
-                                        Kategori Dihapus
-                                    </span>
-                                @endif
-                            </td>
-                            <td>{{ \Carbon\Carbon::parse($item->tgl_perolehan)->format('d M Y') }}</td>
-                            <td style="color: #1b3c53; font-weight: 600;">Rp {{ number_format($item->nilai_perolehan, 0, ',', '.') }}</td>
-                            <td>
-                                @php
-                                    $badgeClass = 'bg-secondary';
-                                    $kondisiText = 'Tidak Diketahui';
-                                    
-                                    switch($item->kondisi) {
-                                        case 'Sangat Baik':
-                                            $badgeClass = 'bg-success';
-                                            $kondisiText = 'Sangat Baik';
-                                            break;
-                                        case 'Baik':
-                                            $badgeClass = 'bg-warning text-dark';
-                                            $kondisiText = 'Baik';
-                                            break;
-                                        case 'Rusak Ringan':
-                                            $badgeClass = 'bg-danger';
-                                            $kondisiText = 'Rusak Ringan';
-                                            break;
-                                        case 'Rusak Berat':
-                                            $badgeClass = 'bg-info';
-                                            $kondisiText = 'Rusak Berat';
-                                            break;
-                                    }
-                                @endphp
-                                <span class="badge {{ $badgeClass }} badge-kondisi">
-                                    {{ $kondisiText }}
-                                </span>
-                            </td>
+                    @foreach ($aset as $item)
+                    <tr>
+                        <td class="fw-bold" style="color: #1b3c53;">{{ $counter++ }}</td>
+                        {{-- KOLOM FOTO ASET --}}
+                        <td>
+                            @php
+                            // Mengambil foto pertama dari relasi media
+                            $fotoUtama = $item->media->where('ref_table', 'aset')->first();
+                            @endphp
 
-                            <td>
-                                <div class="action-buttons">
-                                    <a href="{{ route('aset.edit', $item->aset_id) }}" class="btn-edit" title="Edit Aset">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
+                            @if($fotoUtama)
+                            <img src="{{ asset('storage/' . $fotoUtama->file_name) }}"
+                                class="asset-img"
+                                alt="{{ $item->nama_aset }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#imageModal{{ $item->aset_id }}"
+                                style="cursor: pointer;">
+                            @else
+                            <div class="asset-img-placeholder">
+                                <i class="bi bi-image" style="font-size: 1.5rem;"></i>
+                            </div>
+                            @endif
+                        </td>
+                        <td style="color: #456882; font-weight: 600;">{{ $item->kode_aset }}</td>
+                        <td style="color: #1b3c53; font-weight: 500;">{{ $item->nama_aset }}</td>
+                        <td>
+                            @if($item->kategori)
+                            <span class="kategori-badge">
+                                {{ $item->kategori->nama }}
+                            </span>
+                            @else
+                            <span class="kategori-badge" style="background: #f8d7da; color: #721c24;">
+                                Kategori Dihapus
+                            </span>
+                            @endif
+                        </td>
+                        <td>{{ \Carbon\Carbon::parse($item->tgl_perolehan)->format('d M Y') }}</td>
+                        <td style="color: #1b3c53; font-weight: 600;">Rp {{ number_format($item->nilai_perolehan, 0, ',', '.') }}</td>
+                        <td>
+                            @php
+                            $badgeClass = 'bg-secondary';
+                            $kondisiText = 'Tidak Diketahui';
 
-                                    <form action="{{ route('aset.destroy', $item->aset_id) }}" method="POST" class="d-inline">
-                                        @csrf 
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-delete" title="Hapus Aset" 
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus aset {{ $item->nama_aset }}?')">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
+                            switch($item->kondisi) {
+                            case 'Sangat Baik':
+                            $badgeClass = 'bg-success';
+                            $kondisiText = 'Sangat Baik';
+                            break;
+                            case 'Baik':
+                            $badgeClass = 'bg-warning text-dark';
+                            $kondisiText = 'Baik';
+                            break;
+                            case 'Rusak Ringan':
+                            $badgeClass = 'bg-danger';
+                            $kondisiText = 'Rusak Ringan';
+                            break;
+                            case 'Rusak Berat':
+                            $badgeClass = 'bg-info';
+                            $kondisiText = 'Rusak Berat';
+                            break;
+                            }
+                            @endphp
+                            <span class="badge {{ $badgeClass }} badge-kondisi">
+                                {{ $kondisiText }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{{ route('aset.edit', $item->aset_id) }}" class="btn-edit" title="Edit Aset">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                <form action="{{ route('aset.destroy', $item->aset_id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-delete" title="Hapus Aset"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset {{ $item->nama_aset }}?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
                     @else
-                        <tr>
-                            <td colspan="9" class="text-center py-4">
-                                <div class="d-flex flex-column align-items-center">
-                                    <i class="bi bi-inbox" style="font-size: 3rem; color: #d2c1b6; margin-bottom: 1rem;"></i>
-                                    <h5 style="color: #1b3c53;">Belum Ada Data Aset</h5>
-                                    <p class="text-muted">Silakan tambah aset pertama Anda</p>
-                                    <a href="{{ route('aset.create') }}" class="btn btn-primary-custom mt-2">
-                                        <i class="bi bi-plus-circle me-1"></i> Tambah Aset Pertama
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="9" class="text-center py-4">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="bi bi-inbox" style="font-size: 3rem; color: #d2c1b6; margin-bottom: 1rem;"></i>
+                                <h5 style="color: #1b3c53;">Belum Ada Data Aset</h5>
+                                <p class="text-muted">Silakan tambah aset pertama Anda</p>
+                                <a href="{{ route('aset.create') }}" class="btn btn-primary-custom mt-2">
+                                    <i class="bi bi-plus-circle me-1"></i> Tambah Aset Pertama
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                     @endif
                 </tbody>
             </table>
@@ -351,25 +372,25 @@
 </div>
 
 <script>
-// Konfirmasi sebelum menghapus
-document.addEventListener('DOMContentLoaded', function() {
-    const deleteForms = document.querySelectorAll('form[action*="destroy"]');
-    
-    deleteForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const assetName = this.closest('tr').querySelector('td:nth-child(4)').textContent;
-            if (!confirm(`Apakah Anda yakin ingin menghapus aset "${assetName}"? Tindakan ini tidak dapat dibatalkan.`)) {
-                e.preventDefault();
-            }
+    // Konfirmasi sebelum menghapus
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteForms = document.querySelectorAll('form[action*="destroy"]');
+
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const assetName = this.closest('tr').querySelector('td:nth-child(4)').textContent;
+                if (!confirm(`Apakah Anda yakin ingin menghapus aset "${assetName}"? Tindakan ini tidak dapat dibatalkan.`)) {
+                    e.preventDefault();
+                }
+            });
         });
     });
-});
 
-// Tooltip untuk aksi
-const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-});
+    // Tooltip untuk aksi
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
 </script>
 
 @endsection
