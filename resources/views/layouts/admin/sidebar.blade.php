@@ -15,7 +15,7 @@
             <a href="{{ route ('aset.index') }}" class="nav-link {{ request()->is('aset*') ? 'active' : '' }}">
                 <i class="bi bi-box"></i> Data Aset
             </a>
-            <a href="#" class="nav-link {{ request()->is('lokasi*') ? 'active' : '' }}">
+            <a href="{{route('lokasi-aset.index')}}" class="nav-link {{ request()->is('lokasi*') ? 'active' : '' }}">
                 <i class="bi bi-geo-alt"></i> Lokasi Aset
             </a>
             <a href="#" class="nav-link {{ request()->is('pemeliharaan*') ? 'active' : '' }}">
