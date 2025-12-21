@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KategoriAsetController;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\LokasiAsetController;
+use App\Http\Controllers\PemeliharaanAsetController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,4 +30,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('kategori-aset', KategoriAsetController::class);
     Route::resource('aset', AsetController::class);
     Route::resource('lokasi-aset', LokasiAsetController::class);
+    Route::resource('pemeliharaan', PemeliharaanAsetController::class);
 });

@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        Schema::create('pemeliharaan_aset', function (Blueprint $table) {
+            $table->id('pemeliharaan_id');
+            $table->unsignedBigInteger('aset_id'); // Foreign Key
+            $table->date('tanggal');
+            $table->text('tindakan');
+            $table->decimal('biaya', 15, 2);
+            $table->string('pelaksana');
+            $table->timestamps();
+
+            // Relasi ke tabel aset
+            $table->foreign('aset_id')->references('aset_id')->on('aset')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('pemeliharaan_asets');
+    }
+};

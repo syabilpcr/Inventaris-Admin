@@ -18,7 +18,7 @@
             <a href="{{route('lokasi-aset.index')}}" class="nav-link {{ request()->is('lokasi*') ? 'active' : '' }}">
                 <i class="bi bi-geo-alt"></i> Lokasi Aset
             </a>
-            <a href="#" class="nav-link {{ request()->is('pemeliharaan*') ? 'active' : '' }}">
+            <a href="{{route('pemeliharaan.index')}}" class="nav-link {{ request()->is('pemeliharaan*') ? 'active' : '' }}">
                 <i class="bi bi-wrench"></i> Pemeliharaan
             </a>
             <a href="#" class="nav-link {{ request()->is('mutasi*') ? 'active' : '' }}">
