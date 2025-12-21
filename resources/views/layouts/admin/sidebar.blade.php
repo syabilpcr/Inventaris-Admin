@@ -9,7 +9,7 @@
             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('home') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
-            <a href="{{ route('kategori.index') }}" class="nav-link {{ request()->is('kategori*') ? 'active' : '' }}">
+            <a href="{{ route('kategori-aset.index') }}" class="nav-link {{ request()->is('kategori-aset*') ? 'active' : '' }}">
                 <i class="bi bi-tag"></i> Kategori Aset
             </a>
             <a href="{{ route ('aset.index') }}" class="nav-link {{ request()->is('aset*') ? 'active' : '' }}">

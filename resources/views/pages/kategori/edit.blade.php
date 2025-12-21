@@ -1,4 +1,4 @@
-@extends('layouts.admin.master')
+@extends('layouts.admin.app')
 
 @section('title', 'Edit Kategori Aset')
 
@@ -7,34 +7,26 @@
 
     <h3>Edit Kategori Aset</h3>
 
-    <form action="{{ route('kategori.update', $kategori->id) }}" method="POST">
+    <form action="{{ route('kategori-aset.update', $kategori->kategori_id) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="mb-3">
             <label>Nama Kategori</label>
             <input type="text"
-                name="nama_kategori"
+                name="nama"
                 class="form-control"
-                value="{{ old('nama_kategori', $kategori->nama_kategori) }}"
+                value="{{ old('nama_kategori', $kategori->nama) }}"
                 required>
         </div>
 
         <div class="mb-3">
             <label>Kode Kategori</label>
             <input type="text"
+                name="kode"
                 class="form-control"
-                value="{{ $kategori->kode_kategori }}"
+                value="{{ $kategori->kode }}"
                 readonly>
-        </div>
-
-        <div class="mb-3">
-            <label>Status</label>
-            <select name="status" class="form-select" required>
-                <option value="1" {{ old('status', $kategori->status) == 1 ? 'selected' : '' }}>Aktif</option>
-                <option value="0" {{ old('status', $kategori->status) == 0 ? 'selected' : '' }}>Nonaktif</option>
-            </select>
-
         </div>
 
         <div class="mb-3">
@@ -43,7 +35,7 @@
         </div>
 
         <button class="btn btn-primary">Update</button>
-        <a href="{{ route('kategori.index') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ route('kategori-aset.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
 
 </div>
