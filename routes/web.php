@@ -6,6 +6,7 @@ use App\Http\Controllers\AsetController;
 use App\Http\Controllers\LokasiAsetController;
 use App\Http\Controllers\PemeliharaanAsetController;
 use App\Http\Controllers\MutasiAsetController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -33,4 +34,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('lokasi-aset', LokasiAsetController::class);
     Route::resource('pemeliharaan', PemeliharaanAsetController::class);
     Route::resource('mutasi', MutasiAsetController::class);
+    Route::resource('user', UserController::class);
 });
