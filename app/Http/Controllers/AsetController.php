@@ -11,14 +11,14 @@ class AsetController extends Controller
     public function index()
     {
         // Menggunakan eager loading (with) agar lebih cepat
-        $asets = Aset::with('kategori')->get();
-        return view('admin.aset.index', compact('asets'));
+        $aset = Aset::with('kategori')->get();
+        return view('pages.aset.index', compact('aset'));
     }
 
     public function create()
     {
         $kategori = KategoriAset::all();
-        return view('admin.aset.create', compact('kategori'));
+        return view('pages.aset.create', compact('kategori'));
     }
 
     public function store(Request $request)
@@ -41,7 +41,7 @@ class AsetController extends Controller
     {
         $aset = Aset::findOrFail($id);
         $kategori = KategoriAset::all();
-        return view('admin.aset.edit', compact('aset', 'kategori'));
+        return view('pages.aset.edit', compact('aset', 'kategori'));
     }
 
     public function update(Request $request, $id)

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KategoriAsetController;
+use App\Http\Controllers\AsetController;
 use Illuminate\Support\Facades\Route;
 
 
