@@ -8,7 +8,7 @@
     }
 
     .page-header-custom {
-        background: linear-gradient(135deg, #d2c1b6, #456882);
+        background: linear-gradient(135deg, #1b3c53, #456882);
         border-radius: 20px;
         padding: 35px 40px;
         color: white;
@@ -31,22 +31,54 @@
         border: 2px solid #d2c1b6;
         border-radius: 12px;
         padding: 12px 15px;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
         background: #fefcfb;
     }
 
-    .form-control-custom:focus {
-        border-color: #456882;
-        box-shadow: 0 0 0 3px rgba(69, 104, 130, 0.1);
-        background: white;
+    .form-section {
+        background: #fefcfb;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border-left: 4px solid #456882;
     }
 
-    .form-label-custom {
+    .form-section h5 {
         color: #1b3c53;
         font-weight: 600;
-        margin-bottom: 8px;
-        font-size: 0.95rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9e1d9;
+    }
+
+    /* Styles for Photo Preview */
+    .current-photo-container {
+        position: relative;
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .current-photo {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #d2c1b6;
+    }
+
+    .upload-box {
+        border: 2px dashed #d2c1b6;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .upload-box:hover {
+        border-color: #456882;
+        background: #f0f4f7;
     }
 
     .btn-primary-custom {
@@ -55,14 +87,6 @@
         padding: 12px 30px;
         border-radius: 12px;
         font-weight: 600;
-        transition: all 0.3s ease;
-        color: white;
-    }
-
-    .btn-primary-custom:hover {
-        background: linear-gradient(135deg, #456882, #1b3c53);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(69, 104, 130, 0.3);
         color: white;
     }
 
@@ -72,30 +96,7 @@
         padding: 12px 30px;
         border-radius: 12px;
         font-weight: 600;
-        transition: all 0.3s ease;
         color: #1b3c53;
-    }
-
-    .btn-secondary-custom:hover {
-        background: #c4b0a3;
-        transform: translateY(-2px);
-        color: #1b3c53;
-    }
-
-    .form-section {
-        background: #fefcfb;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 25px;
-        border-left: 4px solid #d2c1b6;
-    }
-
-    .form-section h5 {
-        color: #1b3c53;
-        font-weight: 600;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e9e1d9;
     }
 
     .required-field::after {
@@ -110,102 +111,142 @@
     <div class="page-header-custom">
         <div>
             <h2 class="fw-bold mb-2">Edit Lokasi Aset</h2>
-            <p class="mb-0 opacity-75">Perbarui informasi penempatan aset Anda</p>
+            <p class="mb-0 opacity-75">Perbarui rincian dan foto penempatan aset</p>
         </div>
         <div>
             <i class="bi bi-pencil-square" style="font-size: 55px; opacity: .85;"></i>
         </div>
     </div>
 
-    {{-- CARD CONTENT --}}
     <div class="card-soft">
-
-        @if($errors->any())
-        <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-radius: 12px;">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-
-        <form action="{{ route('lokasi-aset.update', $lokasi->lokasi_id) }}" method="POST">
+        {{-- Enctype ditambahkan untuk upload file --}}
+        <form action="{{ route('lokasi-aset.update', $lokasi->lokasi_id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            {{-- PEMILIHAN ASET --}}
-            <div class="form-section">
-                <h5><i class="bi bi-box-seam me-2"></i>Informasi Aset</h5>
-                <div class="mb-3">
-                    <label class="form-label-custom required-field">Aset yang Ditempatkan</label>
-                    <select name="aset_id" class="form-control form-control-custom" required>
-                        <option value="">-- Pilih Aset --</option>
-                        @foreach ($assets as $a)
-                        <option value="{{ $a->aset_id }}" {{ (old('aset_id', $lokasi->aset_id) == $a->aset_id) ? 'selected' : '' }}>
-                            {{ $a->kode_aset }} - {{ $a->nama_aset }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
+            <div class="row">
+                {{-- KIRI: FORM DATA --}}
+                <div class="col-lg-7">
+                    <div class="form-section">
+                        <h5><i class="bi bi-info-circle me-2"></i>Informasi Penempatan</h5>
 
-            {{-- DETAIL LOKASI --}}
-            <div class="form-section">
-                <h5><i class="bi bi-geo-alt me-2"></i>Detail Lokasi Baru</h5>
+                        <div class="mb-3">
+                            <label class="form-label-custom required-field">Aset yang Ditempatkan</label>
+                            <select name="aset_id" class="form-control form-control-custom" required>
+                                @foreach ($assets as $a)
+                                <option value="{{ $a->aset_id }}" {{ (old('aset_id', $lokasi->aset_id) == $a->aset_id) ? 'selected' : '' }}>
+                                    {{ $a->kode_aset }} - {{ $a->nama_aset }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                <div class="mb-3">
-                    <label class="form-label-custom required-field">Nama Lokasi / Ruangan</label>
-                    <input type="text" name="lokasi_text"
-                        class="form-control form-control-custom"
-                        value="{{ old('lokasi_text', $lokasi->lokasi_text) }}"
-                        placeholder="Contoh: Gedung A, Ruang Meeting 01" required>
-                </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom required-field">Nama Lokasi / Ruangan</label>
+                            <input type="text" name="lokasi_text" class="form-control form-control-custom"
+                                value="{{ old('lokasi_text', $lokasi->lokasi_text) }}" required>
+                        </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label-custom">RT</label>
-                        <input type="text" name="rt"
-                            class="form-control form-control-custom"
-                            value="{{ old('rt', $lokasi->rt) }}"
-                            placeholder="000" maxlength="5">
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">RT</label>
+                                <input type="text" name="rt" class="form-control form-control-custom input-number"
+                                    value="{{ old('rt', $lokasi->rt) }}" placeholder="000" maxlength="3">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">RW</label>
+                                <input type="text" name="rw" class="form-control form-control-custom input-number"
+                                    value="{{ old('rw', $lokasi->rw) }}" placeholder="000" maxlength="3">
+                            </div>
+                        </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label-custom">RW</label>
-                        <input type="text" name="rw"
-                            class="form-control form-control-custom"
-                            value="{{ old('rw', $lokasi->rw) }}"
-                            placeholder="000" maxlength="5">
+                        <div class="mb-0">
+                            <label class="form-label-custom">Keterangan</label>
+                            <textarea name="keterangan" class="form-control form-control-custom" rows="3">{{ old('keterangan', $lokasi->keterangan) }}</textarea>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label-custom">Keterangan Tambahan</label>
-                    <textarea name="keterangan" class="form-control form-control-custom"
-                        rows="3" placeholder="Masukkan detail tambahan...">{{ old('keterangan', $lokasi->keterangan) }}</textarea>
+                {{-- KANAN: FOTO --}}
+                <div class="col-lg-5">
+                    <div class="form-section">
+                        <h5><i class="bi bi-camera me-2"></i>Dokumentasi Foto</h5>
+
+                        {{-- Foto Saat Ini --}}
+                        <div class="mb-4">
+                            <label class="form-label-custom d-block">Foto Saat Ini</label>
+                            <div class="d-flex flex-wrap">
+                                @php
+                                $photos = $lokasi->media->where('ref_table', 'lokasi_aset');
+                                @endphp
+
+                                @forelse($photos as $photo)
+                                <div class="current-photo-container">
+                                    <img src="{{ asset('storage/' . $photo->file_name) }}" class="current-photo shadow-sm">
+                                </div>
+                                @empty
+                                <div class="text-muted small py-3 border w-100 text-center rounded bg-light">
+                                    <i class="bi bi-image me-1"></i> Belum ada foto terunggah
+                                </div>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        {{-- Update Foto --}}
+                        <div class="mb-2">
+                            <label class="form-label-custom">Ganti / Tambah Foto</label>
+                            <div class="upload-box" onclick="document.getElementById('foto_lokasi').click()">
+                                <i class="bi bi-upload text-primary fs-3"></i>
+                                <p class="small text-muted mt-2 mb-0">Klik untuk memilih file foto baru</p>
+                                <input type="file" name="foto_lokasi[]" id="foto_lokasi" class="d-none" multiple accept="image/*" onchange="previewImages(event)">
+                            </div>
+                            <div id="new-preview-grid" class="d-flex flex-wrap mt-3"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {{-- TOMBOL AKSI --}}
             <div class="d-flex justify-content-between mt-4 pt-3 border-top">
                 <a href="{{ route('lokasi-aset.index') }}" class="btn btn-secondary-custom">
                     <i class="bi bi-x-circle me-2"></i> Batal
                 </a>
 
                 <button type="submit" class="btn btn-primary-custom">
-                    <i class="bi bi-save me-2"></i> Perbarui Data Lokasi
+                    <i class="bi bi-check-circle me-2"></i> Perbarui Data
                 </button>
             </div>
         </form>
-
     </div>
 </div>
 
 <script>
-    // Memastikan input RT/RW hanya angka
-    document.querySelectorAll('input[name="rt"], input[name="rw"]').forEach(input => {
-        input.addEventListener('input', function(e) {
+    // Preview foto baru yang dipilih
+    function previewImages(event) {
+        const grid = document.getElementById('new-preview-grid');
+        grid.innerHTML = '';
+
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = "80px";
+                img.style.height = "80px";
+                img.style.objectFit = "cover";
+                img.style.borderRadius = "8px";
+                img.style.marginRight = "10px";
+                img.style.marginBottom = "10px";
+                img.style.border = "2px solid #456882";
+                grid.appendChild(img);
+            }
+            reader.readAsDataURL(files[i]);
+        }
+    }
+
+    // Input RT/RW angka saja
+    document.querySelectorAll('.input-number').forEach(input => {
+        input.addEventListener('input', function() {
             this.value = this.value.replace(/[^\d]/g, '');
         });
     });
