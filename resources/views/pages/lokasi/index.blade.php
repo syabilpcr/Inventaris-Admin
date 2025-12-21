@@ -203,7 +203,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th style="width: 50px">#</th>
+                        <th style="width: 50px">NO</th>
                         <th>Nama Aset</th>
                         <th>Lokasi (Titik)</th>
                         <th>RT/RW</th>

@@ -250,7 +250,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>NO</th>
                         <th>Kode Aset</th>
                         <th>Nama Aset</th>
                         <th>Kategori</th>

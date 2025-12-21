@@ -91,7 +91,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-header text-center">
                     <tr>
-                        <th width="5%">#</th>
+                        <th width="5%">NO</th>
                         <th>Nama Kategori</th>
                         <th>Kode</th>
                         <th>Deskripsi</th>

@@ -15,13 +15,13 @@
             <a href="{{ route ('aset.index') }}" class="nav-link {{ request()->is('aset*') ? 'active' : '' }}">
                 <i class="bi bi-box"></i> Data Aset
             </a>
-            <a href="{{route('lokasi-aset.index')}}" class="nav-link {{ request()->is('lokasi*') ? 'active' : '' }}">
+            <a href="{{route('lokasi-aset.index')}}" class="nav-link {{ request()->is('lokasi-aset*') ? 'active' : '' }}">
                 <i class="bi bi-geo-alt"></i> Lokasi Aset
             </a>
             <a href="{{route('pemeliharaan.index')}}" class="nav-link {{ request()->is('pemeliharaan*') ? 'active' : '' }}">
                 <i class="bi bi-wrench"></i> Pemeliharaan
             </a>
-            <a href="#" class="nav-link {{ request()->is('mutasi*') ? 'active' : '' }}">
+            <a href="{{route('mutasi.index')}}" class="nav-link {{ request()->is('mutasi*') ? 'active' : '' }}">
                 <i class="bi bi-arrow-left-right"></i> Mutasi Aset
             </a>
         </nav>

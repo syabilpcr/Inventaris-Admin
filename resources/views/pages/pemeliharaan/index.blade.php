@@ -60,6 +60,7 @@
             <table class="table table-hover align-middle table-custom">
                 <thead>
                     <tr>
+                        <th>NO</th>
                         <th>Tanggal</th>
                         <th>Aset</th>
                         <th>Tindakan</th>
@@ -69,8 +70,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php $counter = 1; @endphp
                     @foreach($pemeliharaan as $p)
                     <tr>
+                        <td>{{ $counter++ }}</td>
                         <td>{{ \Carbon\Carbon::parse($p->tanggal)->format('d/m/Y') }}</td>
                         <td>
                             <div class="fw-bold">{{ $p->aset->nama_aset }}</div>
