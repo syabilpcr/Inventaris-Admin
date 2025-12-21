@@ -1,127 +1,114 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<style>
-    body {
-        background: #f9f3ef !important;
-    }
-
-    .page-header-custom {
-        background: linear-gradient(135deg, #456882, #1b3c53);
-        border-radius: 20px;
-        padding: 35px 40px;
-        color: white;
-        margin-bottom: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 8px 25px rgba(27, 60, 83, 0.15);
-    }
-
-    .card-soft {
-        background: white;
-        border-radius: 18px;
-        padding: 30px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-        border: 1px solid #e9e1d9;
-    }
-
-    .form-label-custom {
-        color: #1b3c53;
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-
-    .form-control-custom {
-        border: 2px solid #d2c1b6;
-        border-radius: 12px;
-        padding: 12px;
-        transition: all 0.3s ease;
-        background: #fefcfb;
-    }
-
-    .form-control-custom:focus {
-        border-color: #456882;
-        box-shadow: 0 0 0 3px rgba(69, 104, 130, 0.1);
-    }
-</style>
-
 <div class="container-fluid px-4">
-    {{-- HEADER --}}
-    <div class="page-header-custom">
-        <div>
-            <h2 class="fw-bold mb-2">Edit Pengguna</h2>
-            <p class="mb-0 opacity-75">Perbarui profil atau hak akses pengguna sistem</p>
-        </div>
-        <i class="bi bi-person-gear" style="font-size: 55px; opacity: .85;"></i>
-    </div>
+    <div class="card-soft" style="background: white; border-radius: 18px; padding: 30px; margin-top: 30px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);">
+        <h3 class="fw-bold mb-4 text-dark">Edit Pengguna</h3>
 
-    {{-- CONTENT --}}
-    <div class="card-soft">
-        @if($errors->any())
-        <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-radius: 12px;">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-
-        <form action="{{ route('user.update', $user->id) }}" method="POST">
+        {{-- Enctype wajib ada untuk update file --}}
+        <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
+            <div class="row mb-4">
+                <div class="col-md-12 text-center">
+                    <label class="form-label d-block fw-bold mb-3">Foto Profil Saat Ini</label>
+                    @if($user->profile_picture)
+                    <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                        id="preview-foto"
+                        alt="Profile"
+                        class="rounded-circle object-fit-cover mb-2"
+                        style="width: 120px; height: 120px; border: 4px solid #d2c1b6;">
+                    @else
+                    <div id="placeholder-foto" class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold mx-auto mb-2"
+                        style="width: 120px; height: 120px; border: 4px solid #d2c1b6; font-size: 2rem;">
+                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                    </div>
+                    @endif
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label-custom">Nama Lengkap</label>
-                    <input type="text" name="name" class="form-control form-control-custom"
+                    <label class="form-label fw-bold">Nama Lengkap</label>
+                    <input type="text" name="name" class="form-control border-2" style="border-radius: 10px;"
                         value="{{ old('name', $user->name) }}" required>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label-custom">Alamat Email</label>
-                    <input type="email" name="email" class="form-control form-control-custom"
+                    <label class="form-label fw-bold">Email</label>
+                    <input type="email" name="email" class="form-control border-2" style="border-radius: 10px;"
                         value="{{ old('email', $user->email) }}" required>
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label-custom">Role / Hak Akses</label>
-                <select name="role" class="form-select form-control-custom" required>
-                    <option value="staff" {{ $user->role == 'staff' ? 'selected' : '' }}>Staff</option>
-                    <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                </select>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Role</label>
+                    <select name="role" class="form-select border-2" style="border-radius: 10px;">
+                        <option value="staff" {{ $user->role == 'staff' ? 'selected' : '' }}>Staff</option>
+                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Ganti Foto Profil</label>
+                    <input type="file" name="profile_picture" class="form-control border-2"
+                        style="border-radius: 10px;" accept="image/*" onchange="previewImage(this)">
+                    <small class="text-muted">Biarkan kosong jika tidak ingin mengubah foto.</small>
+                </div>
             </div>
 
-            <hr class="my-4" style="border-top: 2px dashed #d2c1b6;">
-
-            <div class="alert alert-info border-0 shadow-sm" style="border-radius: 12px;">
-                <i class="bi bi-info-circle me-2"></i>
-                Kosongkan kolom password di bawah jika Anda <strong>tidak ingin</strong> mengubah password.
-            </div>
+            <hr class="my-4">
+            <h5 class="fw-bold text-muted mb-3">Ganti Password (Opsional)</h5>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label-custom">Password Baru (Opsional)</label>
-                    <input type="password" name="password" class="form-control form-control-custom"
+                    <label class="form-label fw-bold">Password Baru</label>
+                    <input type="password" name="password" class="form-control border-2" style="border-radius: 10px;"
                         placeholder="********">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label-custom">Konfirmasi Password Baru</label>
-                    <input type="password" name="password_confirmation" class="form-control form-control-custom"
-                        placeholder="********">
+                    <label class="form-label fw-bold">Konfirmasi Password Baru</label>
+                    <input type="password" name="password_confirmation" class="form-control border-2"
+                        style="border-radius: 10px;" placeholder="********">
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between mt-4 pt-3 border-top">
-                <a href="{{ route('user.index') }}" class="btn btn-secondary px-4 py-2" style="border-radius: 12px; background: #d2c1b6; border: none; color: #1b3c53; font-weight: 600;">
-                    <i class="bi bi-arrow-left me-2"></i> Kembali
-                </a>
-                <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 12px; background: #1b3c53; border: none; font-weight: 600;">
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ route('user.index') }}" class="btn btn-secondary px-4" style="border-radius: 10px;">Batal</a>
+                <button type="submit" class="btn btn-primary px-4" style="background: #1b3c53; border: none; border-radius: 10px;">
                     <i class="bi bi-save me-2"></i> Perbarui User
                 </button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    // Fungsi untuk preview gambar sebelum diupload
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // Jika sebelumnya ada placeholder teks, kita ganti jadi element img
+                let preview = document.getElementById('preview-foto');
+                let placeholder = document.getElementById('placeholder-foto');
+
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                    // Buat elemen img baru jika sebelumnya tidak ada foto
+                    let newImg = document.createElement('img');
+                    newImg.id = 'preview-foto';
+                    newImg.className = 'rounded-circle object-fit-cover mb-2 mx-auto d-block';
+                    newImg.style = 'width: 120px; height: 120px; border: 4px solid #d2c1b6;';
+                    newImg.src = e.target.result;
+                    placeholder.parentNode.appendChild(newImg);
+                } else {
+                    preview.src = e.target.result;
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 @endsection

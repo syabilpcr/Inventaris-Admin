@@ -16,6 +16,7 @@
         <table class="table table-hover align-middle">
             <thead>
                 <tr>
+                    <th style="width: 80px;">Foto</th>
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Role</th>
@@ -25,9 +26,30 @@
             <tbody>
                 @foreach($users as $user)
                 <tr>
-                    <td><strong>{{ $user->name }}</strong></td>
+                    <td>
+                        @if($user->profile_picture)
+                        <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                            alt="Profile"
+                            class="rounded-circle object-fit-cover"
+                            style="width: 45px; height: 45px; border: 2px solid #d2c1b6;">
+                        @else
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold"
+                            style="width: 45px; height: 45px; border: 2px solid #d2c1b6; font-size: 0.8rem;">
+                            {{ strtoupper(substr($user->name, 0, 2)) }}
+                        </div>
+                        @endif
+                    </td>
+                    <td>
+                        <strong>{{ $user->name }}</strong>
+                    </td>
                     <td>{{ $user->email }}</td>
-                    <td><span class="badge bg-info text-dark">{{ ucfirst($user->role) }}</span></td>
+                    <td>
+                        @if($user->role == 'admin')
+                        <span class="badge bg-primary px-3 py-2 rounded-pill">Admin</span>
+                        @else
+                        <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">Staff</span>
+                        @endif
+                    </td>
                     <td class="text-center">
                         <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-outline-primary border-0"><i class="bi bi-pencil"></i></a>
                         <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="d-inline">
