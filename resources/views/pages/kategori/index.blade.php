@@ -3,148 +3,225 @@
 @section('title', 'Kategori Aset - Sistem Inventaris')
 
 @section('content')
-<div class="container-fluid py-4 px-4 main-wrapper" style="background: #f9f3ef; min-height: 100vh;">
 
-    {{-- Header Baru --}}
-    <div class="row mb-5 animate-header">
-        <div class="col-12">
-            <div class="hero-section rounded-4 p-5 text-white position-relative overflow-hidden">
-                <div class="hero-background"></div>
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h1 class="display-5 fw-bold mb-3">Manajemen Kategori Aset</h1>
-                        <p class="mb-0 opacity-75">Kelola dan organisasi kategori aset dengan mudah</p>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="hero-icon rounded-3 p-4 d-inline-block">
+<style>
+    body {
+        background: #f9f3ef !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-                        </div>
-                    </div>
+    .page-header-custom {
+        background: linear-gradient(135deg, #1b3c53, #456882);
+        border-radius: 20px;
+        padding: 35px 40px;
+        color: white;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 8px 25px rgba(27, 60, 83, 0.15);
+    }
+
+    .card-soft {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e9e1d9;
+    }
+
+    .table th {
+        background: linear-gradient(135deg, #1b3c53, #456882) !important;
+        color: white;
+        vertical-align: middle;
+        border: none;
+        padding: 16px 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .table td {
+        vertical-align: middle;
+        background: white;
+        padding: 14px 12px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #1b3c53, #456882);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-primary-custom:hover {
+        background: linear-gradient(135deg, #456882, #1b3c53);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(69, 104, 130, 0.3);
+        color: white;
+    }
+
+    .btn-edit {
+        background: #d2c1b6;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        color: #1b3c53;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-edit:hover {
+        background: #456882;
+        color: white;
+    }
+
+    .btn-delete {
+        background: #e74c3c;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        color: white;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-delete:hover {
+        background: #c0392b;
+    }
+
+    .info-section {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #456882;
+    }
+
+    .table-responsive {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #e9e1d9;
+    }
+
+    .kategori-badge {
+        background: rgba(210, 193, 182, 0.2);
+        color: #1b3c53;
+        padding: 6px 14px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .animate-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="container-fluid px-4">
+
+    {{-- HEADER --}}
+    <div class="page-header-custom animate-up">
+        <div>
+            <h2 class="fw-bold mb-2">Manajemen Kategori Aset</h2>
+            <p class="mb-0 opacity-75">Kelola pengelompokan aset agar lebih terorganisir</p>
+        </div>
+        <div>
+            <i class="bi bi-tags" style="font-size: 55px; opacity: .85;"></i>
+        </div>
+    </div>
+
+    {{-- STATISTICS SECTION --}}
+    <div class="row mb-4 animate-up" style="animation-delay: 0.1s;">
+        <div class="col-md-12">
+            <div class="info-section d-flex align-items-center justify-content-between">
+                <div>
+                    <h5 class="fw-bold mb-1"><i class="bi bi-grid me-2"></i>Total Kategori</h5>
+                    <p class="text-muted mb-0">Jumlah klasifikasi aset saat ini</p>
                 </div>
+                <h2 class="fw-bold mb-0" style="color: #1b3c53;">{{ $kategoris->count() }} <span class="fs-5 fw-normal">Kategori</span></h2>
             </div>
         </div>
     </div>
 
-    {{-- Header Asli --}}
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4 animate-header">
-        <div class="mb-2">
-            <h2 class="fw-bold mb-0" style="color: #1b3c53;">
-                <i class="bi bi-list-ul me-2" style="color: #456882;"></i>Daftar Kategori
-            </h2>
-            <small style="color: #456882;">Kelola semua kategori aset dalam sistem</small>
+    {{-- CARD CONTENT --}}
+    <div class="card-soft animate-up" style="animation-delay: 0.2s;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0" style="color: #1b3c53;">
+                <i class="bi bi-list-ul me-2"></i> Daftar Kategori
+            </h4>
+            <a href="{{ route('kategori-aset.create') }}" class="btn btn-primary-custom">
+                <i class="bi bi-plus-circle me-2"></i> Tambah Kategori
+            </a>
         </div>
-        <a href="{{ route('kategori-aset.create') }}" class="btn btn-add-category d-flex align-items-center gap-2 shadow-lg">
-            <i class="bi bi-plus-circle-fill fs-5"></i>
-            <span>Tambah Kategori</span>
-        </a>
-    </div>
 
-    {{-- Notifikasi --}}
-    @if (session('success'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('
-                success ') }}',
-                timer: 2000,
-                showConfirmButton: false,
-                background: '#f9f3ef',
-                color: '#456882',
-                toast: true,
-                position: 'top-end',
-                customClass: {
-                    popup: 'animate__animated animate__fadeInDown rounded-4 shadow-lg border',
-                    icon: 'text-success'
-                }
-            });
-        });
-    </script>
-    @elseif (session('error'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: '{{ session('
-                error ') }}',
-                timer: 2200,
-                showConfirmButton: false,
-                background: '#f9f3ef',
-                color: '#1b3c53',
-                toast: true,
-                position: 'top-end',
-                customClass: {
-                    popup: 'animate__animated animate__fadeInDown rounded-4 shadow-lg border',
-                    icon: 'text-danger'
-                }
-            });
-        });
-    </script>
-    @endif
-
-    {{-- Card Table --}}
-    <div class="card-custom shadow-xl border-0 rounded-5 overflow-hidden fade-in">
-        @if (isset($kategoris) && count($kategoris))
-        <div class="table-responsive table-wrapper">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-header text-center">
-                    <tr>
-                        <th width="5%">NO</th>
-                        <th>Nama Kategori</th>
-                        <th>Kode</th>
-                        <th>Deskripsi</th>
-                        <th>Tanggal Update</th>
-                        <th width="12%">Aksi</th>
+        @if($kategoris->count() > 0)
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr class="text-center">
+                        <th width="50">NO</th>
+                        <th>NAMA KATEGORI</th>
+                        <th>KODE</th>
+                        <th>DESKRIPSI</th>
+                        <th>UPDATE TERAKHIR</th>
+                        <th width="150">AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($kategoris as $kategori)
-                    <tr class="table-row animate__animated animate__fadeInUp" data-id="{{ $kategori->id }}">
-                        <td class="text-center fw-semibold" style="color: #456882;">{{ $loop->iteration }}</td>
-                        <td class="fw-semibold" style="color: #1b3c53;">{{ strtoupper($kategori->nama) }}</td>
+                    <tr>
+                        <td class="text-center fw-bold" style="color: #1b3c53;">{{ $loop->iteration }}</td>
+                        <td>
+                            <div class="fw-bold" style="color: #1b3c53;">{{ strtoupper($kategori->nama) }}</div>
+                        </td>
                         <td class="text-center">
-                            <span class="badge px-3 py-2 rounded-pill shadow-sm" style="background: rgba(27, 60, 83, 0.1); color: #1b3c53;">
+                            <span class="kategori-badge">
                                 {{ strtoupper($kategori->kode) }}
                             </span>
                         </td>
-                        <td style="color: #456882;">{{ $kategori->deskripsi ?? '-' }}</td>
-                        <td class="text-center" style="color: #456882;">
-                            <div class="d-flex flex-column align-items-center">
-                                <small class="text-muted mb-1">
-                                    <i class="bi bi-calendar3 me-1"></i>
-                                    {{ $kategori->updated_at->timezone('Asia/Jakarta')->translatedFormat('d F Y') }}
-                                </small>
-                                <small class="text-muted">
-                                    <i class="bi bi-clock me-1"></i>
-                                    {{ $kategori->updated_at->timezone('Asia/Jakarta')->translatedFormat('H:i') }}
-                                </small>
-                                @if($kategori->updated_at->gt($kategori->created_at))
-                                <small class="text-success mt-1">
-                                    <i class="bi bi-arrow-clockwise me-1"></i>
-                                    Diupdate
-                                </small>
-                                @else
-                                <small class="text-muted mt-1">
-                                    <i class="bi bi-plus-circle me-1"></i>
-                                    Dibuat
-                                </small>
-                                @endif
-                            </div>
+                        <td style="color: #456882; max-width: 300px;">
+                            {{ $kategori->deskripsi ?? '-' }}
                         </td>
                         <td class="text-center">
+                            <div class="d-flex flex-column">
+                                <small style="color: #1b3c53; font-weight: 500;">
+                                    <i class="bi bi-calendar3 me-1"></i> {{ $kategori->updated_at->translatedFormat('d M Y') }}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i> {{ $kategori->updated_at->format('H:i') }} WIB
+                                </small>
+                            </div>
+                        </td>
+                        <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('kategori-aset.edit', $kategori->kategori_id) }}"
-                                    class="btn btn-sm btn-light shadow-sm border hover-scale"
-                                    title="Edit Kategori" style="color: #456882; border-color: #d2c1b6!important;">
+                                <a href="{{ route('kategori-aset.edit', $kategori->kategori_id) }}" 
+                                   class="btn-edit" title="Edit">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <form action="{{ route('kategori-aset.destroy', $kategori->kategori_id) }}" method="POST" class="delete-form d-inline">
+                                <form action="{{ route('kategori-aset.destroy', $kategori->kategori_id) }}" 
+                                      method="POST" class="delete-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-light shadow-sm border hover-scale btn-delete-trigger"
-                                        title="Hapus Kategori" style="color: #1b3c53; border-color: #d2c1b6!important;">
+                                    <button type="submit" class="btn-delete btn-delete-trigger" title="Hapus">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -156,314 +233,63 @@
             </table>
         </div>
         @else
-        <div class="text-center py-5 fade-in">
-            <i class="bi bi-inbox fs-1" style="color: #d2c1b6;"></i>
-            <h5 class="mt-3 fw-bold" style="color: #1b3c53;">Belum Ada Kategori</h5>
-            <p class="mb-3" style="color: #456882;">Tambahkan kategori untuk memulai</p>
-            <a href="{{ route('kategori-aset.create') }}" class="btn btn-add-category">
-                <i class="bi bi-plus-circle-fill me-2"></i> Tambah Kategori
-            </a>
+        <div class="text-center py-5">
+            <i class="bi bi-tag text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+            <h5 class="mt-3 text-muted">Belum ada kategori aset yang terdaftar.</h5>
+            <a href="{{ route('kategori-aset.create') }}" class="btn btn-primary-custom mt-3">Buat Kategori Pertama</a>
         </div>
         @endif
     </div>
 </div>
 
-{{-- STYLE --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-<style>
-    :root {
-        --primary-dark: #1b3c53;
-        --primary-medium: #456882;
-        --primary-light: #d2c1b6;
-        --background: #f9f3ef;
-    }
-
-    body {
-        background: var(--background);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .main-wrapper {
-        padding: 1.5rem;
-    }
-
-    /* Hero Section Styles */
-    .hero-section {
-        box-shadow: 0 10px 30px rgba(27, 60, 83, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .hero-background {
-        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-    }
-
-    .hero-icon {
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Card Styles */
-    .card-custom {
-        background: #fff;
-        border-radius: 1.5rem;
-        padding: 1.8rem;
-        transition: all 0.4s ease;
-        box-shadow: 0 5px 18px rgba(27, 60, 83, 0.08);
-        border: 1px solid rgba(210, 193, 182, 0.3);
-    }
-
-    .card-custom:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(27, 60, 83, 0.12);
-    }
-
-    /* Table Styles */
-    .table-header {
-        background: linear-gradient(90deg, rgba(210, 193, 182, 0.1), rgba(249, 243, 239, 0.3));
-        font-weight: 600;
-        color: var(--primary-dark);
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-    }
-
-    .table th,
-    .table td {
-        padding: 14px 16px;
-        font-size: 0.93rem;
-        border-color: rgba(210, 193, 182, 0.2);
-    }
-
-    .table-row {
-        transition: all 0.3s ease;
-    }
-
-    .table-row:hover {
-        background-color: rgba(210, 193, 182, 0.1) !important;
-        transform: scale(1.01);
-        box-shadow: inset 0 0 0 2px rgba(210, 193, 182, 0.3);
-    }
-
-    /* Badge Styles */
-    .bg-success-soft {
-        background-color: rgba(69, 104, 130, 0.1) !important;
-    }
-
-    .bg-danger-soft {
-        background-color: rgba(27, 60, 83, 0.1) !important;
-    }
-
-    .bg-primary-soft {
-        background-color: rgba(27, 60, 83, 0.1) !important;
-    }
-
-    /* Button Styles */
-    .hover-scale {
-        transition: all 0.25s ease;
-        background: #fff;
-    }
-
-    .hover-scale:hover {
-        transform: scale(1.1);
-        background: var(--background);
-    }
-
-    .btn-add-category {
-        background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
-        color: #fff;
-        border: none;
-        padding: 10px 22px;
-        border-radius: 12px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(27, 60, 83, 0.25);
-        text-decoration: none;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .btn-add-category:hover {
-        transform: translateY(-2px) scale(1.03);
-        background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
-        box-shadow: 0 8px 18px rgba(27, 60, 83, 0.35);
-        color: #fff;
-    }
-
-    /* Action Buttons */
-    .btn-light {
-        background: #fff;
-        border: 1px solid var(--primary-light);
-        color: var(--primary-medium);
-        transition: all 0.3s ease;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .btn-light:hover {
-        background: var(--background);
-        border-color: var(--primary-medium);
-        color: var(--primary-dark);
-    }
-
-    /* Animations */
-    .fade-in {
-        animation: fadeIn 0.8s ease forwards;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .animate-header {
-        animation: fadeDown 0.8s ease forwards;
-    }
-
-    @keyframes fadeDown {
-        from {
-            opacity: 0;
-            transform: translateY(-15px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* SweetAlert Customization */
-    .swal2-popup {
-        border: 1px solid var(--primary-light) !important;
-    }
-
-    /* Text Colors */
-    .text-primary-custom {
-        color: var(--primary-dark) !important;
-    }
-
-    .text-secondary-custom {
-        color: var(--primary-medium) !important;
-    }
-
-    .text-muted-custom {
-        color: var(--primary-light) !important;
-    }
-
-    /* Timestamp Styling */
-    .text-success {
-        color: #456882 !important;
-        font-weight: 600;
-    }
-
-    .text-muted {
-        color: #8a9ba8 !important;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-
-        .table th:nth-child(4),
-        .table td:nth-child(4) {
-            display: none;
-        }
-
-        .table th:nth-child(5),
-        .table td:nth-child(5) {
-            min-width: 120px;
-        }
-    }
-</style>
-@endsection
-
-@section('scripts')
+{{-- SweetAlert & Scripts --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Notifikasi Toast
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        @endif
+
+        // Konfirmasi Hapus
         document.querySelectorAll(".btn-delete-trigger").forEach(btn => {
             btn.addEventListener("click", function(e) {
                 e.preventDefault();
                 const form = this.closest("form");
-                const row = this.closest("tr");
-
+                
                 Swal.fire({
-                    title: '<strong style="color: #1b3c53; font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif;">Yakin ingin menghapus kategori ini?</strong>',
-                    html: '<p style="font-size:15px;color:#456882;margin-top:8px; font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif;">Tindakan ini <b>tidak dapat dibatalkan</b>.</p>',
+                    title: 'Hapus Kategori?',
+                    text: "Aset yang menggunakan kategori ini mungkin akan terpengaruh.",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: '<i class="bi bi-trash-fill me-1"></i> Ya, hapus',
-                    cancelButtonText: '<i class="bi bi-x-circle me-1"></i> Batal',
-                    reverseButtons: true,
-                    background: '#f9f3ef',
-                    backdrop: `rgba(27, 60, 83, 0.4)`,
                     confirmButtonColor: '#1b3c53',
-                    cancelButtonColor: '#456882',
-                    showClass: {
-                        popup: 'animate__animated animate__zoomIn animate__faster'
-                    },
-                    hideClass: {
-                        popup: 'animate__animated animate__zoomOut animate__faster'
-                    },
-                    customClass: {
-                        popup: 'rounded-4 shadow-lg border',
-                        confirmButton: 'btn px-4 py-2 fw-semibold shadow-sm rounded-3',
-                        cancelButton: 'btn px-4 py-2 fw-semibold shadow-sm rounded-3'
-                    }
+                    cancelButtonColor: '#e74c3c',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                    borderRadius: '15px'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.fire({
-                            title: 'Menghapus...',
-                            text: 'Mohon tunggu sebentar.',
-                            icon: 'info',
-                            showConfirmButton: false,
-                            allowOutsideClick: false,
-                            background: '#f9f3ef',
-                            color: '#1b3c53',
-                            didOpen: () => {
-                                Swal.showLoading();
-                                row.classList.add('animate__animated', 'animate__fadeOutLeft');
-                                setTimeout(() => form.submit(), 600);
-                            }
-                        });
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        Swal.fire({
-                            title: 'Dibatalkan',
-                            text: 'Kategori tidak jadi dihapus.',
-                            icon: 'info',
-                            timer: 1500,
-                            showConfirmButton: false,
-                            background: '#f9f3ef',
-                            color: '#456882',
-                            customClass: {
-                                popup: 'rounded-4 shadow-lg border animate__animated animate__fadeIn'
-                            }
-                        });
+                        form.submit();
                     }
                 });
             });
         });
 
-        // Auto refresh timestamp indicator
-        setInterval(() => {
-            document.querySelectorAll('.table-row').forEach(row => {
-                const timestampElement = row.querySelector('.text-success');
-                if (timestampElement) {
-                    timestampElement.style.opacity = timestampElement.style.opacity === '0.7' ? '1' : '0.7';
-                }
-            });
-        }, 2000);
+        // Tooltip
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
     });
 </script>
+
 @endsection

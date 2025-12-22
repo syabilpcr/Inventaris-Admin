@@ -1,244 +1,172 @@
 @extends('layouts.admin.app')
 
-@section('title', 'Tambah Kategori - Sistem Inventaris')
-
 @section('content')
-<div class="container-fluid py-4 px-4 main-wrapper animate__animated animate__fadeIn" style="background: #f9f3ef; min-height: 100vh;">
+<style>
+    body {
+        background: #f9f3ef !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-    {{-- Header --}}
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4 animate__animated animate__fadeInDown">
-        <div class="mb-2">
-            <h2 class="fw-bold mb-0" style="color: #1b3c53;">
-                <i class="bi bi-plus-circle me-2" style="color: #456882;"></i> Tambah Kategori Baru
-            </h2>
-            <small style="color: #456882;">Buat kategori aset baru untuk sistem inventaris</small>
+    .page-header-custom {
+        background: linear-gradient(135deg, #1b3c53, #456882);
+        border-radius: 20px;
+        padding: 35px 40px;
+        color: white;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 8px 25px rgba(27, 60, 83, 0.15);
+    }
+
+    .card-soft {
+        background: white;
+        border-radius: 18px;
+        padding: 30px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e9e1d9;
+    }
+
+    .form-control-custom {
+        border: 2px solid #d2c1b6;
+        border-radius: 12px;
+        padding: 12px 15px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: #fefcfb;
+    }
+
+    .form-control-custom:focus {
+        border-color: #456882;
+        box-shadow: 0 0 0 3px rgba(69, 104, 130, 0.1);
+        background: white;
+    }
+
+    .form-label-custom {
+        color: #1b3c53;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #1b3c53, #456882);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+    }
+
+    .btn-primary-custom:hover {
+        background: linear-gradient(135deg, #456882, #1b3c53);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(69, 104, 130, 0.3);
+        color: white;
+    }
+
+    .btn-secondary-custom {
+        background: #d2c1b6;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: #1b3c53;
+    }
+
+    .btn-secondary-custom:hover {
+        background: #c4b0a3;
+        transform: translateY(-2px);
+        color: #1b3c53;
+    }
+
+    .form-section {
+        background: #fefcfb;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border-left: 4px solid #456882;
+    }
+
+    .form-section h5 {
+        color: #1b3c53;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9e1d9;
+    }
+
+    .required-field::after {
+        content: " *";
+        color: #e74c3c;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    {{-- HEADER --}}
+    <div class="page-header-custom animate__animated animate__fadeInDown">
+        <div>
+            <h2 class="fw-bold mb-2">Tambah Kategori Baru</h2>
+            <p class="mb-0 opacity-75">Buat kategori aset baru untuk mengorganisir inventaris</p>
         </div>
-        <a href="{{ route('kategori-aset.index') }}" class="btn btn-secondary-custom hover-scale">
-            <i class="bi bi-arrow-left me-2"></i> Kembali
-        </a>
+        <div>
+            <i class="bi bi-tag" style="font-size: 55px; opacity: .85;"></i>
+        </div>
     </div>
 
-    {{-- Card Form --}}
-    <div class="card-custom shadow-lg border-0 rounded-4 animate__animated animate__fadeInUp">
-        <form method="POST" action="{{ route('kategori-aset.store') }}" id="kategoriForm">
+    <div class="card-soft animate__animated animate__fadeInUp">
+        <form action="{{ route('kategori-aset.store') }}" method="POST" id="kategoriForm">
             @csrf
 
-            {{-- Error Alert --}}
-            @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show mb-4"
-                style="background: linear-gradient(135deg, #ef4444, #dc2626); border: none; color: white;">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                Terdapat kesalahan dalam pengisian form. Silakan periksa kembali.
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endif
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    
+                    {{-- INFORMASI KATEGORI --}}
+                    <div class="form-section">
+                        <h5><i class="bi bi-info-circle me-2"></i>Detail Kategori</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom required-field">Nama Kategori</label>
+                                <input type="text" name="nama" id="nama" class="form-control form-control-custom @error('nama') is-invalid @enderror" 
+                                    value="{{ old('nama') }}" placeholder="Contoh: Elektronik / Kendaraan" required>
+                                @error('nama')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom required-field">Kode Kategori</label>
+                                <input type="text" name="kode" id="kode" class="form-control form-control-custom @error('kode') is-invalid @enderror" 
+                                    value="{{ old('kode') }}" placeholder="Contoh: ELC / KND" required>
+                                @error('kode')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
-            {{-- Input Fields --}}
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="nama" class="form-label fw-semibold" style="color: #1b3c53;">Nama Kategori <span class="text-danger">*</span></label>
-                    <input type="text"
-                        class="form-control"
-                        id="nama"
-                        name="nama"
-                        value="{{ old('nama') }}"
-                        placeholder="Masukkan nama kategori"
-                        required
-                        style="border: 1.5px solid #d2c1b6; border-radius: 10px; padding: 10px 12px;">
-                    @error('nama')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
-                </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Deskripsi (Opsional)</label>
+                            <textarea name="deskripsi" class="form-control form-control-custom" rows="4" 
+                                placeholder="Masukkan keterangan tambahan mengenai kategori ini">{{ old('deskripsi') }}</textarea>
+                        </div>
+                    </div>
 
-                <div class="col-md-6">
-                    <label for="kode" class="form-label fw-semibold" style="color: #1b3c53;">Kode Kategori <span class="text-danger">*</span></label>
-                    <input type="text"
-                        class="form-control"
-                        id="kode"
-                        name="kode"
-                        value="{{ old('kode') }}"
-                        placeholder="Masukkan kode kategori"
-                        required
-                        style="border: 1.5px solid #d2c1b6; border-radius: 10px; padding: 10px 12px;">
-                    @error('kode')
-                    <div class="text-danger mt-1">{{ $message }}</div>
-                    @enderror
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label for="deskripsi" class="form-label fw-semibold" style="color: #1b3c53;">Deskripsi</label>
-                <textarea class="form-control"
-                    id="deskripsi"
-                    name="deskripsi"
-                    rows="4"
-                    placeholder="Masukkan deskripsi kategori (opsional)"
-                    style="border: 1.5px solid #d2c1b6; border-radius: 10px; padding: 10px 12px;">{{ old('deskripsi') }}</textarea>
-                @error('deskripsi')
-                <div class="text-danger mt-1">{{ $message }}</div>
-                @enderror
-            </div>
-
-            {{-- Tombol --}}
-            <div class="d-flex justify-content-end gap-2 pt-3">
-                <a href="{{ route('kategori-aset.index') }}" class="btn btn-secondary-custom hover-scale">
-                    <i class="bi bi-x-circle me-2"></i> Batal
+            {{-- ACTION BUTTONS --}}
+            <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                <a href="{{ route('kategori-aset.index') }}" class="btn btn-secondary-custom">
+                    <i class="bi bi-arrow-left me-2"></i> Kembali
                 </a>
-                <button type="submit" class="btn btn-primary-custom hover-scale" id="btnSubmit">
+                <button type="submit" class="btn btn-primary-custom">
                     <i class="bi bi-check-circle me-2"></i> Simpan Kategori
                 </button>
             </div>
         </form>
     </div>
 </div>
-
-{{-- STYLE --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-<style>
-    :root {
-        --primary-dark: #1b3c53;
-        --primary-medium: #456882;
-        --primary-light: #d2c1b6;
-        --background: #f9f3ef;
-    }
-
-    body {
-        background: var(--background);
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .main-wrapper {
-        max-width: 100%;
-    }
-
-    /* Card dan Input */
-    .card-custom {
-        background: #fff;
-        border-radius: 1.2rem;
-        padding: 2rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(27, 60, 83, 0.08);
-        border: 1px solid rgba(210, 193, 182, 0.3);
-    }
-
-    .card-custom:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(27, 60, 83, 0.12);
-    }
-
-    .form-label {
-        color: var(--primary-dark);
-        margin-bottom: 6px;
-    }
-
-    .form-control {
-        border: 1.5px solid var(--primary-light);
-        border-radius: 10px;
-        padding: 10px 12px;
-        transition: all 0.3s ease;
-        color: var(--primary-dark);
-    }
-
-    .form-control:focus {
-        border-color: var(--primary-medium);
-        box-shadow: 0 0 8px rgba(69, 104, 130, 0.25);
-        outline: none;
-    }
-
-    /* Radio Button Styling */
-    .form-check-input:checked {
-        background-color: var(--primary-medium);
-        border-color: var(--primary-medium);
-    }
-
-    .form-check-input:focus {
-        border-color: var(--primary-medium);
-        box-shadow: 0 0 0 0.2rem rgba(69, 104, 130, 0.25);
-    }
-
-    /* Tombol */
-    .btn-primary-custom {
-        background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
-        border: none;
-        color: white;
-        padding: 10px 22px;
-        border-radius: 10px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(27, 60, 83, 0.25);
-    }
-
-    .btn-primary-custom:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 18px rgba(27, 60, 83, 0.35);
-        background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
-        color: white;
-    }
-
-    .btn-secondary-custom {
-        background: var(--primary-medium);
-        color: white;
-        border: none;
-        padding: 10px 22px;
-        border-radius: 10px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(69, 104, 130, 0.25);
-    }
-
-    .btn-secondary-custom:hover {
-        background: var(--primary-dark);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 18px rgba(27, 60, 83, 0.35);
-        color: white;
-    }
-
-    .hover-scale {
-        transition: all 0.25s ease;
-    }
-
-    .hover-scale:hover {
-        transform: scale(1.05);
-    }
-
-    /* Placeholder styling */
-    ::placeholder {
-        color: #d2c1b6 !important;
-        opacity: 0.7;
-    }
-
-    /* Error styling */
-    .text-danger {
-        color: #dc3545 !important;
-        font-size: 0.875rem;
-    }
-
-    /* Alert customization */
-    .alert {
-        border-radius: 10px;
-        border: none;
-    }
-
-    /* Responsif */
-    @media (max-width: 992px) {
-        .card-custom {
-            padding: 1.5rem;
-        }
-
-        .d-flex.justify-content-end {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn {
-            width: 100%;
-        }
-
-        .d-flex.gap-4.flex-wrap {
-            gap: 15px !important;
-        }
-    }
-</style>
 @endsection
 
 @section('scripts')
@@ -249,12 +177,12 @@
         const kodeInput = document.getElementById('kode');
         const form = document.getElementById('kategoriForm');
 
-        // Otomatis buat kode kategori dari nama
+        // Otomatis buat kode kategori dari nama (4 karakter pertama)
         namaInput.addEventListener('blur', function() {
             if (!kodeInput.value) {
                 const nama = this.value.trim();
-                if (nama.length >= 4) {
-                    kodeInput.value = nama.substring(0, 4).toUpperCase();
+                if (nama.length >= 3) {
+                    kodeInput.value = nama.substring(0, 3).toUpperCase();
                 }
             }
         });
@@ -264,60 +192,22 @@
             e.preventDefault();
 
             Swal.fire({
-                title: '<strong style="color: #1b3c53">Simpan Kategori Baru?</strong>',
-                html: '<p style="color: #456882; margin-top: 8px;">Pastikan semua data sudah benar.</p>',
+                title: 'Simpan Kategori Baru?',
+                text: "Pastikan nama dan kode kategori sudah sesuai.",
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: '<i class="bi bi-check-circle me-1"></i> Ya, Simpan!',
-                cancelButtonText: '<i class="bi bi-x-circle me-1"></i> Batal',
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal',
                 confirmButtonColor: '#1b3c53',
-                cancelButtonColor: '#456882',
-                background: '#f9f3ef',
-                customClass: {
-                    popup: 'rounded-4 animate__animated animate__zoomIn shadow-lg border',
-                    confirmButton: 'btn px-4 py-2 fw-semibold shadow-sm rounded-3',
-                    cancelButton: 'btn px-4 py-2 fw-semibold shadow-sm rounded-3'
-                }
+                cancelButtonColor: '#d2c1b6',
+                background: '#fefcfb',
+                borderRadius: '18px'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Menyimpan...',
-                        text: 'Mohon tunggu sebentar',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        background: '#f9f3ef',
-                        color: '#1b3c53',
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                        customClass: {
-                            popup: 'rounded-4 animate__animated animate__fadeIn shadow-lg border'
-                        }
-                    });
-                    setTimeout(() => form.submit(), 1000);
+                    this.submit();
                 }
             });
         });
-
-        // Notifikasi sukses setelah simpan
-        @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: '{{ session('
-            success ') }}',
-            showConfirmButton: false,
-            timer: 2000,
-            toast: true,
-            position: 'top-end',
-            background: '#f9f3ef',
-            color: '#456882',
-            customClass: {
-                popup: 'rounded-4 animate__animated animate__fadeInDown shadow-lg border',
-                icon: 'text-success'
-            }
-        });
-        @endif
     });
 </script>
 @endsection
