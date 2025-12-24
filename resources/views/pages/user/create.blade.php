@@ -25,6 +25,47 @@
         padding: 30px;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         border: 1px solid #e9e1d9;
+        margin-bottom: 50px;
+    }
+
+    /* Style Khusus Upload Foto */
+    .image-upload-wrapper {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 15px;
+    }
+
+    .image-preview {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 4px solid #f9f3ef;
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        display: block;
+    }
+
+    .btn-upload-icon {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: #456882;
+        color: white;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 3px solid white;
+        transition: all 0.3s;
+    }
+
+    .btn-upload-icon:hover {
+        background: #1b3c53;
+        transform: scale(1.1);
     }
 
     .form-control-custom {
@@ -56,14 +97,13 @@
         border-radius: 12px;
         font-weight: 600;
         transition: all 0.3s ease;
-        color: white;
+        color: white !important;
     }
 
     .btn-primary-custom:hover {
         background: linear-gradient(135deg, #456882, #1b3c53);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(69, 104, 130, 0.3);
-        color: white;
     }
 
     .btn-secondary-custom {
@@ -73,13 +113,7 @@
         border-radius: 12px;
         font-weight: 600;
         transition: all 0.3s ease;
-        color: #1b3c53;
-    }
-
-    .btn-secondary-custom:hover {
-        background: #c4b0a3;
-        transform: translateY(-2px);
-        color: #1b3c53;
+        color: #1b3c53 !important;
     }
 
     .form-section {
@@ -123,12 +157,34 @@
     </div>
 
     <div class="card-soft">
-        <form action="{{ route('user.store') }}" method="POST">
+        {{-- Atribut enctype sangat penting untuk upload file --}}
+        <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="row">
                 <div class="col-lg-12">
-                    {{-- INFORMASI AKUN --}}
+                    
+                    {{-- UPLOAD FOTO SECTION --}}
+                    <div class="text-center mb-5">
+                        <div class="image-upload-wrapper">
+                            {{-- Preview Gambar --}}
+                            <img src="https://ui-avatars.com/api/?name=User&background=d2c1b6&color=1b3c53&size=128" 
+                                 id="preview-foto" class="image-preview" alt="Preview Foto">
+                            
+                            {{-- Label sebagai tombol klik --}}
+                            <label for="foto-input" class="btn-upload-icon">
+                                <i class="bi bi-camera-fill"></i>
+                            </label>
+                            
+                            {{-- Input File Hidden --}}
+                            <input type="file" name="foto" id="foto-input" class="d-none" accept="image/png, image/jpeg, image/jpg">
+                        </div>
+                        <h6 class="fw-bold mb-1" style="color: #1b3c53;">Foto Profil</h6>
+                        <p class="text-muted small mb-0">Klik ikon kamera untuk memilih foto</p>
+                        @error('foto') <small class="text-danger d-block mt-2">{{ $message }}</small> @enderror
+                    </div>
+
+                    {{-- INFORMASI PROFIL --}}
                     <div class="form-section">
                         <h5><i class="bi bi-person-vcard me-2"></i>Informasi Profil</h5>
                         <div class="row">
@@ -153,7 +209,8 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label-custom required-field">Role / Hak Akses</label>
-                                <select name="role" class="form-control form-control-custom" required>
+                                <select name="role" class="form-select form-control-custom" required>
+                                    <option value="" disabled selected>Pilih Role</option>
                                     <option value="staff" {{ old('role') == 'staff' ? 'selected' : '' }}>Staff</option>
                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                                 </select>
@@ -187,4 +244,22 @@
         </form>
     </div>
 </div>
+
+{{-- Script untuk Preview Foto Otomatis --}}
+<script>
+    document.getElementById('foto-input').onchange = function (evt) {
+        const [file] = this.files
+        if (file) {
+            // Validasi sederhana ukuran file (opsional, misal 2MB)
+            if(file.size > 2097152){
+                alert("Ukuran file terlalu besar! Maksimal 2MB.");
+                this.value = "";
+                return;
+            };
+            
+            // Tampilkan Preview
+            document.getElementById('preview-foto').src = URL.createObjectURL(file)
+        }
+    }
+</script>
 @endsection

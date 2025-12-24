@@ -17,7 +17,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-image: url("/images/BG_admin.jpg");
+            background-image: url("/images/BG_admin4.jpg");
             background-size: 100% auto;
             /* FULL lebar, tidak zoom */
             background-position: center top;
@@ -67,8 +67,8 @@
         }
 
         .logo-container {
-            width: 180px;
-            height: 180px;
+            width: 200px;
+            height: 200px;
             margin: auto;
             border-radius: 15px;
             overflow: hidden;
@@ -300,37 +300,18 @@
             <!-- LEFT -->
             <div class="auth-left">
                 <div>
-                    <div class="logo-container mb-3">
-                        <img src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=600&q=80">
-                    </div>
 
+                    <div class="logo-container mb-3">
+                        <img src="{{ asset('images/Logo_Besmindo.jpg') }}" alt="Logo Besmindo">
+                    </div>
+                    <h2 style="font-size: 1.3rem; font-weight: 600; color: white; margin-bottom: 20px;">PT. BESMINDO</h2>
                     <div class="logo-text mb-4">
                         <h1>Inventory System</h1>
                         <h2>Inventaris & Aset</h2>
                     </div>
 
-                    <div class="illustration mb-4">
-                        <div style="background: #456882; border-radius: 15px; padding: 25px; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid #1b3c53;">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3050/3050526.png"
-                                onerror="this.src='https://cdn-icons-png.flaticon.com/512/4845/4845654.png'">
-                        </div>
-                    </div>
-
-                    <h2 style="font-size: 1.3rem; font-weight: 600; color: white; margin-bottom: 20px;">PT. BESMINDO</h2>
-
                     <div class="text-start mt-4">
-                        <div class="d-flex align-items-center mb-2 feature-item">
-                            <i class="bi bi-check-circle me-2"></i>
-                            <span>Manajemen Inventaris Terintegrasi</span>
-                        </div>
-                        <div class="d-flex align-items-center mb-2 feature-item">
-                            <i class="bi bi-check-circle me-2"></i>
-                            <span>Tracking Aset Real-time</span>
-                        </div>
-                        <div class="d-flex align-items-center mb-2 feature-item">
-                            <i class="bi bi-check-circle me-2"></i>
-                            <span>Laporan Keuangan Akurat</span>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

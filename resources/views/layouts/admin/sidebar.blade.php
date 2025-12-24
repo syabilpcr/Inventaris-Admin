@@ -1,7 +1,7 @@
 <div class="sidebar shadow-sm" id="sidebar">
     <div class="d-flex flex-column h-100">
         <div class="sidebar-header-custom">
-            <i class="bi bi-box-seam"></i>
+           <img src="{{asset('images/Logo_Besmindo.jpg')}}" width="50px" alt=""> 
             <span>Inventaris</span>
         </div>
 

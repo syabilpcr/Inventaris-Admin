@@ -1,5 +1,7 @@
 @extends('layouts.admin.app')
 
+@section('title', 'Manajemen User - Sistem Inventaris')
+
 @section('content')
 
 <style>
@@ -100,28 +102,6 @@
         background: #c0392b;
     }
 
-    .user-img {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 2px solid #d2c1b6;
-    }
-
-    .user-img-placeholder {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid #d2c1b6;
-        background: #f9f3ef;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #1b3c53;
-        font-weight: bold;
-        font-size: 0.8rem;
-    }
-
     .info-section {
         background: white;
         border-radius: 15px;
@@ -131,12 +111,37 @@
         border-left: 4px solid #456882;
     }
 
-    .badge-role {
-        padding: 6px 14px;
-        border-radius: 15px;
-        font-weight: 600;
-        font-size: 0.75rem;
+    .user-img {
+        width: 45px;
+        height: 45px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #e9e1d9;
     }
+
+    .user-img-placeholder {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: rgba(210, 193, 182, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1b3c53;
+        font-weight: bold;
+        font-size: 0.8rem;
+    }
+
+    .role-badge {
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .role-admin { background: rgba(27, 60, 83, 0.1); color: #1b3c53; }
+    .role-staff { background: rgba(69, 104, 130, 0.1); color: #456882; }
 
     .table-responsive {
         border-radius: 12px;
@@ -144,23 +149,24 @@
         border: 1px solid #e9e1d9;
     }
 
-    .alert-custom {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 15px 20px;
-        margin-bottom: 25px;
+    /* Animasi */
+    .animate-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 
 <div class="container-fluid px-4">
 
     {{-- HEADER --}}
-    <div class="page-header-custom">
+    <div class="page-header-custom animate-up">
         <div>
             <h2 class="fw-bold mb-2">Manajemen User</h2>
-            <p class="mb-0 opacity-75">Kelola pengguna dan hak akses sistem</p>
+            <p class="mb-0 opacity-75">Kelola data pengguna dan kontrol akses sistem</p>
         </div>
         <div>
             <i class="bi bi-people" style="font-size: 55px; opacity: .85;"></i>
@@ -168,94 +174,94 @@
     </div>
 
     {{-- STATISTICS SECTION --}}
-    <div class="row mb-4">
-        <div class="col-md-6">
+    <div class="row mb-4 animate-up" style="animation-delay: 0.1s;">
+        <div class="col-md-4">
             <div class="info-section">
-                <h5 class="fw-bold"><i class="bi bi-person-check me-2"></i>Total Pengguna</h5>
-                <p class="fw-bold fs-4 mb-0" style="color: #1b3c53;">{{ $users->count() }} Orang</p>
+                <h5 class="fw-bold mb-1"><i class="bi bi-person-circle me-2"></i>Total User</h5>
+                <p class="text-muted small mb-2">Seluruh akun terdaftar</p>
+                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->count() }} <span class="fs-6 fw-normal">Orang</span></h3>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="info-section" style="border-left-color: #1b3c53;">
-                <h5 class="fw-bold"><i class="bi bi-shield-lock me-2"></i>Administrator</h5>
-                <p class="fw-bold fs-4 mb-0" style="color: #1b3c53;">{{ $users->where('role', 'admin')->count() }} Akun</p>
+                <h5 class="fw-bold mb-1"><i class="bi bi-shield-check me-2"></i>Administrator</h5>
+                <p class="text-muted small mb-2">User dengan akses penuh</p>
+                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->where('role', 'admin')->count() }} <span class="fs-6 fw-normal">Akun</span></h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-section" style="border-left-color: #d2c1b6;">
+                <h5 class="fw-bold mb-1"><i class="bi bi-person-badge me-2"></i>Staff / User</h5>
+                <p class="text-muted small mb-2">User dengan akses terbatas</p>
+                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->where('role', '!=', 'admin')->count() }} <span class="fs-6 fw-normal">Akun</span></h3>
             </div>
         </div>
     </div>
 
     {{-- CARD CONTENT --}}
-    <div class="card-soft">
+    <div class="card-soft animate-up" style="animation-delay: 0.2s;">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="fw-bold mb-0" style="color: #1b3c53;">
-                <i class="bi bi-list-stars me-2"></i> Daftar Pengguna
+                <i class="bi bi-person-lines-fill me-2"></i> Daftar Pengguna
             </h4>
             <a href="{{ route('user.create') }}" class="btn btn-primary-custom">
-                <i class="bi bi-person-plus me-1"></i> Tambah User
+                <i class="bi bi-person-plus-fill me-2"></i> Tambah User
             </a>
         </div>
 
-        @if(session('success'))
-        <div class="alert-custom">
-            <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
-        </div>
-        @endif
-
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover mb-0">
                 <thead>
                     <tr>
-                        <th style="width: 60px">NO</th>
-                        <th style="width: 80px">FOTO</th>
+                        <th class="text-center" width="70">NO</th>
+                        <th width="80">FOTO</th>
                         <th>NAMA LENGKAP</th>
                         <th>EMAIL</th>
-                        <th>ROLE</th>
-                        <th class="text-center" style="width: 150px">AKSI</th>
+                        <th class="text-center">ROLE</th>
+                        <th class="text-center" width="150">AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php $counter = 1; @endphp
                     @forelse($users as $user)
                     <tr>
-                        <td class="fw-bold text-center" style="color: #1b3c53;">{{ $counter++ }}</td>
+                        <td class="text-center fw-bold" style="color: #1b3c53;">{{ $loop->iteration }}</td>
                         <td>
                             @if($user->profile_picture)
-                                <img src="{{ asset('storage/' . $user->profile_picture) }}" class="user-img" alt="Profile">
+                                <img src="{{ asset('storage/' . $user->profile_picture) }}" class="user-img shadow-sm" alt="Profile">
                             @else
-                                <div class="user-img-placeholder">
+                                <div class="user-img-placeholder shadow-sm">
                                     {{ strtoupper(substr($user->name, 0, 2)) }}
                                 </div>
                             @endif
                         </td>
                         <td>
-                            <div style="color: #1b3c53; font-weight: 600;">{{ $user->name }}</div>
+                            <div class="fw-bold" style="color: #1b3c53;">{{ $user->name }}</div>
                             @if(auth()->id() == $user->id)
-                                <small class="badge bg-soft-primary text-primary" style="background: #e7f1ff; font-size: 0.65rem;">SAYA</small>
+                                <span class="badge bg-success" style="font-size: 0.6rem;">SAYA</span>
                             @endif
                         </td>
                         <td style="color: #456882;">{{ $user->email }}</td>
-                        <td>
-                            @if($user->role == 'admin')
-                                <span class="badge bg-primary badge-role text-white">
-                                    <i class="bi bi-shield-shaded me-1"></i> Admin
-                                </span>
-                            @else
-                                <span class="badge bg-light text-dark border badge-role">
-                                    <i class="bi bi-person me-1"></i> Staff
-                                </span>
-                            @endif
+                        <td class="text-center">
+                            <span class="role-badge {{ $user->role == 'admin' ? 'role-admin' : 'role-staff' }}">
+                                <i class="bi {{ $user->role == 'admin' ? 'bi-shield-shaded' : 'bi-person' }} me-1"></i>
+                                {{ $user->role }}
+                            </span>
                         </td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('user.edit', $user->id) }}" class="btn-edit" title="Edit User">
+                                <a href="{{ route('user.edit', $user->id) }}" 
+                                   class="btn-edit" title="Edit User">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                
+
                                 @if(auth()->id() != $user->id)
-                                <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="d-inline">
+                                <form action="{{ route('user.destroy', $user->id) }}" 
+                                      method="POST" class="delete-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-delete" title="Hapus User" 
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus user {{ $user->name }}?')">
+                                    <button type="button" class="btn-delete btn-delete-trigger" 
+                                            data-name="{{ $user->name }}" 
+                                            title="Hapus User">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -266,8 +272,8 @@
                     @empty
                     <tr>
                         <td colspan="6" class="text-center py-5">
-                            <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
-                            <p class="text-muted mt-2">Tidak ada data pengguna ditemukan.</p>
+                            <i class="bi bi-people text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+                            <h5 class="mt-3 text-muted">Belum ada pengguna terdaftar.</h5>
                         </td>
                     </tr>
                     @endforelse
@@ -277,11 +283,53 @@
     </div>
 </div>
 
+{{-- Scripts --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Tooltip initialization
+        // 1. Toast Alert untuk Success Session
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        @endif
+
+        // 2. SweetAlert Konfirmasi Hapus
+        const deleteButtons = document.querySelectorAll('.btn-delete-trigger');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const form = this.closest('form');
+                const name = this.getAttribute('data-name');
+
+                Swal.fire({
+                    title: 'Hapus User?',
+                    text: `Akun "${name}" akan dihapus permanen dari sistem.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#1b3c53',
+                    cancelButtonColor: '#e74c3c',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true,
+                    borderRadius: '15px'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        // 3. Tooltip
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-        tooltipTriggerList.map(function(tooltipTriggerEl) {
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
