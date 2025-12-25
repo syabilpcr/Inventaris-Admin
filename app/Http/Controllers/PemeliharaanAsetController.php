@@ -12,11 +12,18 @@ use Illuminate\Support\Facades\Storage;
 
 class PemeliharaanAsetController extends Controller
 {
-    public function index()
-    {
-        $pemeliharaan = PemeliharaanAset::with('aset')->latest()->get();
-        return view('pages.pemeliharaan.index', compact('pemeliharaan'));
-    }
+   public function index(Request $request)
+{
+    // Mengambil data dengan filter, search, dan pagination
+    $pemeliharaan = PemeliharaanAset::with(['aset', 'media'])
+        ->filter($request)
+        ->search($request)
+        ->latest('tanggal')
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('pages.pemeliharaan.index', compact('pemeliharaan'));
+}
 
     public function create()
     {

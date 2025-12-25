@@ -204,6 +204,28 @@
         </div>
         @endif
 
+        <div class="card-filter shadow-sm">
+            <form action="{{ route('mutasi.index') }}" method="GET">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <input type="text" name="search" class="form-control" placeholder="Cari Nama Aset atau Kode..." value="{{ request('search') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="jenis" class="form-select">
+                            <option value="">Semua Jenis Mutasi</option>
+                            <option value="Masuk" {{ request('jenis') == 'Masuk' ? 'selected' : '' }}>Masuk</option>
+                            <option value="Keluar" {{ request('jenis') == 'Keluar' ? 'selected' : '' }}>Keluar</option>
+                            <option value="Pindah" {{ request('jenis') == 'Pindah' ? 'selected' : '' }}>Pindah</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary-custom me-2">Cari</button>
+                        <a href="{{ route('mutasi.index') }}" class="btn btn-light">Reset</a>
+                    </div>
+                </div>
+            </form>
+        </div>  
+
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -219,58 +241,61 @@
 
                 <tbody>
                     @if($mutasi->count() > 0)
-                        @foreach ($mutasi as $index => $m)
-                        <tr>
-                            <td class="fw-bold" style="color: #1b3c53;">{{ $index + 1 }}</td>
-                            <td style="color: #456882; font-weight: 500;">
-                                {{ \Carbon\Carbon::parse($m->tanggal)->format('d M Y') }}
-                            </td>
-                            <td>
-                                <div class="fw-bold" style="color: #1b3c53;">{{ $m->aset->nama_aset }}</div>
-                                <small class="text-muted">{{ $m->aset->kode_aset }}</small>
-                            </td>
-                            <td>
-                                <span class="badge-mutasi">
-                                    {{ $m->jenis_mutasi }}
-                                </span>
-                            </td>
-                            <td style="color: #456882; font-style: italic;">
-                                {{ $m->keterangan ?? '-' }}
-                            </td>
-                            <td>
-                                <div class="action-buttons justify-content-center">
-                                    <a href="{{ route('mutasi.edit', $m->mutasi_id) }}" class="btn-edit" title="Edit Mutasi">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
+                    @foreach ($mutasi as $index => $m)
+                    <tr>
+                        <td class="fw-bold" style="color: #1b3c53;">{{ $index + 1 }}</td>
+                        <td style="color: #456882; font-weight: 500;">
+                            {{ \Carbon\Carbon::parse($m->tanggal)->format('d M Y') }}
+                        </td>
+                        <td>
+                            <div class="fw-bold" style="color: #1b3c53;">{{ $m->aset->nama_aset }}</div>
+                            <small class="text-muted">{{ $m->aset->kode_aset }}</small>
+                        </td>
+                        <td>
+                            <span class="badge-mutasi">
+                                {{ $m->jenis_mutasi }}
+                            </span>
+                        </td>
+                        <td style="color: #456882; font-style: italic;">
+                            {{ $m->keterangan ?? '-' }}
+                        </td>
+                        <td>
+                            <div class="action-buttons justify-content-center">
+                                <a href="{{ route('mutasi.edit', $m->mutasi_id) }}" class="btn-edit" title="Edit Mutasi">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
 
-                                    <form action="{{ route('mutasi.destroy', $m->mutasi_id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-delete" title="Hapus Mutasi"
-                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data mutasi ini?')">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
+                                <form action="{{ route('mutasi.destroy', $m->mutasi_id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-delete" title="Hapus Mutasi"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data mutasi ini?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
                     @else
-                        <tr>
-                            <td colspan="6" class="text-center py-5">
-                                <div class="d-flex flex-column align-items-center">
-                                    <i class="bi bi-arrow-left-right" style="font-size: 3rem; color: #d2c1b6; margin-bottom: 1rem;"></i>
-                                    <h5 style="color: #1b3c53;">Belum Ada Data Mutasi</h5>
-                                    <p class="text-muted">Riwayat perpindahan aset akan muncul di sini</p>
-                                    <a href="{{ route('mutasi.create') }}" class="btn btn-primary-custom mt-2">
-                                        <i class="bi bi-plus-circle me-1"></i> Mulai Mutasi
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="bi bi-arrow-left-right" style="font-size: 3rem; color: #d2c1b6; margin-bottom: 1rem;"></i>
+                                <h5 style="color: #1b3c53;">Belum Ada Data Mutasi</h5>
+                                <p class="text-muted">Riwayat perpindahan aset akan muncul di sini</p>
+                                <a href="{{ route('mutasi.create') }}" class="btn btn-primary-custom mt-2">
+                                    <i class="bi bi-plus-circle me-1"></i> Mulai Mutasi
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                     @endif
                 </tbody>
             </table>
+            <div class="mt-4">
+                {{ $mutasi->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>

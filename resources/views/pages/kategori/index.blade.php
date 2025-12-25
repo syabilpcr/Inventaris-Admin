@@ -215,19 +215,46 @@
             <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
         </div>
         @endif
-
+        <form action="{{ route('kategori-aset.index') }}" method="GET" class="d-flex gap-2">
+            <input type="text" name="search" class="form-control w-50" 
+                   placeholder="Cari nama, kode, atau deskripsi..." 
+                   value="{{ request('search') }}" style="border-radius: 10px;">
+            
+            <button type="submit" class="btn btn-primary-custom">
+                <i class="bi bi-search me-1"></i> Filter
+            </button>
+            
+            @if(request('search') || request('sort'))
+                <a href="{{ route('kategori-aset.index') }}" class="btn btn-outline-secondary" style="border-radius: 10px;">
+                    Reset
+                </a>
+            @endif
+        </form>
         <div class="table-responsive">
+
             <table class="table table-hover">
                 <thead>
-                    <tr>
-                        <th style="width: 50px">NO</th>
-                        <th>KODE</th>
-                        <th>NAMA KATEGORI</th>
-                        <th>DESKRIPSI</th>
-                        <th>TERAKHIR DIUBAH</th>
-                        <th style="width: 120px">AKSI</th>
-                    </tr>
-                </thead>
+    <tr>
+        <th style="width: 50px">NO</th>
+        <th>
+            <a href="{{ route('kategori-aset.index', ['sort' => 'kode', 'order' => request('order') == 'asc' ? 'desc' : 'asc', 'search' => request('search')]) }}" class="text-white text-decoration-none">
+                KODE @if(request('sort') == 'kode') <i class="bi bi-sort-{{ request('order') == 'asc' ? 'alpha-down' : 'alpha-up' }}"></i> @endif
+            </a>
+        </th>
+        <th>
+            <a href="{{ route('kategori-aset.index', ['sort' => 'nama', 'order' => request('order') == 'asc' ? 'desc' : 'asc', 'search' => request('search')]) }}" class="text-white text-decoration-none">
+                NAMA KATEGORI @if(request('sort') == 'nama') <i class="bi bi-sort-{{ request('order') == 'asc' ? 'alpha-down' : 'alpha-up' }}"></i> @endif
+            </a>
+        </th>
+        <th>DESKRIPSI</th>
+        <th>
+            <a href="{{ route('kategori-aset.index', ['sort' => 'updated_at', 'order' => request('order') == 'asc' ? 'desc' : 'asc', 'search' => request('search')]) }}" class="text-white text-decoration-none">
+                TERAKHIR DIUBAH @if(request('sort') == 'updated_at') <i class="bi bi-sort-numeric-{{ request('order') == 'asc' ? 'down' : 'up' }}"></i> @endif
+            </a>
+        </th>
+        <th style="width: 120px">AKSI</th>
+    </tr>
+</thead>
 
                 <tbody>
                     @if($kategoris->count() > 0)
@@ -277,6 +304,9 @@
                     @endif
                 </tbody>
             </table>
+            <div class="d-flex justify-content-center mt-3">
+                {{ $kategoris->links() }}
+            </div>
         </div>
     </div>
 </div>

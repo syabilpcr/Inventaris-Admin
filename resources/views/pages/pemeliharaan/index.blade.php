@@ -236,6 +236,41 @@
         </div>
         @endif
 
+        <form method="GET" action="{{ route('pemeliharaan.index') }}" class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <select name="bulan" class="form-select" onchange="this.form.submit()" style="border-radius: 10px;">
+                        <option value="">Semua Bulan</option>
+                        @foreach(range(1, 12) as $m)
+                        <option value="{{ $m }}" {{ request('bulan') == $m ? 'selected' : '' }}>
+                            {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="tahun" class="form-select" onchange="this.form.submit()" style="border-radius: 10px;">
+                        <option value="">Semua Tahun</option>
+                        @for($y = date('Y'); $y >= 2020; $y--)
+                        <option value="{{ $y }}" {{ request('tahun') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" value="{{ request('search') }}"
+                            placeholder="Cari Aset, Pelaksana, atau Tindakan..." style="border-radius: 10px 0 0 10px;">
+                        <button type="submit" class="btn btn-primary-custom" style="border-radius: 0 10px 10px 0;">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <a href="{{ route('pemeliharaan.index') }}" class="btn btn-outline-secondary" style="border-radius: 10px;">Reset</a>
+                </div>
+            </div>
+        </form>
+
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -258,7 +293,7 @@
                         <td class="fw-bold" style="color: #1b3c53;">{{ $index + 1 }}</td>
                         <td>
                             @php
-                                $fotoUtama = $item->media->where('ref_table', 'pemeliharaan')->first();
+                            $fotoUtama = $item->media->where('ref_table', 'pemeliharaan')->first();
                             @endphp
 
                             @if($fotoUtama)
@@ -268,7 +303,7 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#imageModal{{ $item->pemeliharaan_id }}"
                                 style="cursor: pointer;">
-                            
+
                             {{-- Modal Preview Foto --}}
                             <div class="modal fade" id="imageModal{{ $item->pemeliharaan_id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -343,6 +378,14 @@
                     @endif
                 </tbody>
             </table>
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    Menampilkan {{ $pemeliharaan->firstItem() ?? 0 }} - {{ $pemeliharaan->lastItem() ?? 0 }} dari {{ $pemeliharaan->total() }} record
+                </div>
+                <div>
+                    {{ $pemeliharaan->links('pagination::bootstrap-5') }}
+                </div>
+            </div>
         </div>
     </div>
 </div>

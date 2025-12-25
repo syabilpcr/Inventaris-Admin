@@ -284,110 +284,103 @@
 </div>
 
 {{-- Chart.js --}}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('chartAset').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt'],
-                datasets: [{
-                    label: 'Total Aset',
-                    data: [90, 92, 95, 98, 101, 105],
-                    borderColor: '#456882',
-                    backgroundColor: 'rgba(69, 104, 130, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true,
-                    pointBackgroundColor: '#456882',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(27, 60, 83, 0.9)',
-                        titleFont: {
-                            size: 14
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        padding: 10,
-                        titleColor: '#ffffff',
-                        bodyColor: '#ffffff'
-                    }
+        @if(session('login_success'))
+            // Data dari Laravel
+            const userRole = "{{ auth()->user()->role }}"; // Pastikan role tersedia: 'admin' atau 'staff'
+            const userName = "{{ auth()->user()->name }}";
+
+            // Konfigurasi Tema berdasarkan Role
+            const themes = {
+                admin: {
+                    title: 'Administrator Mode',
+                    icon: 'bi-shield-lock-fill',
+                    gradient: 'linear-gradient(135deg, #1b3c53, #456882)',
+                    subtitle: 'Akses penuh sistem diaktifkan.'
                 },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        grid: {
-                            color: 'rgba(210, 193, 182, 0.3)'
-                        },
-                        ticks: {
-                            stepSize: 5,
-                            color: '#1b3c53'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: '#1b3c53'
-                        }
-                    }
+                staff: {
+                    title: 'Staff Access',
+                    icon: 'bi-person-badge-fill',
+                    gradient: 'linear-gradient(135deg, #d2c1b6, #456882)',
+                    subtitle: 'Selamat bekerja dan semangat!'
                 }
-            }
-        });
-    });
+            };
 
-    // WhatsApp Functions
-    function toggleWA() {
-        document.getElementById('waPopup').classList.toggle('show');
-    }
+            const currentTheme = themes[userRole] || themes.staff;
 
-    function openWhatsApp(type) {
-        const phoneNumber = '6281234567890'; // Ganti dengan nomor WhatsApp admin yang sebenarnya
-        const message = 'Halo, saya ingin bertanya tentang sistem inventaris.';
-        const encodedMessage = encodeURIComponent(message);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                background: 'rgba(255, 255, 255, 0.9)',
+            });
 
-        let url = '';
-
-        if (type === 'mobile') {
-            // Untuk membuka WhatsApp Mobile
-            url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-        } else {
-            // Untuk membuka WhatsApp Web
-            url = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-        }
-
-        // Tutup popup setelah memilih opsi
-        toggleWA();
-
-        // Buka WhatsApp di tab baru
-        window.open(url, '_blank');
-    }
-
-    // Tutup popup ketika klik di luar area popup
-    document.addEventListener('click', function(event) {
-        const waPopup = document.getElementById('waPopup');
-        const waBtn = document.querySelector('.wa-btn');
-
-        if (!waPopup.contains(event.target) && !waBtn.contains(event.target)) {
-            waPopup.classList.remove('show');
-        }
+            Toast.fire({
+                html: `
+                    <div class="d-flex align-items-center">
+                        <div class="toast-role-icon" style="background: ${currentTheme.gradient}">
+                            <i class="bi ${currentTheme.icon} text-white"></i>
+                        </div>
+                        <div class="text-start ms-3">
+                            <div class="fw-bold" style="color: #1b3c53; font-size: 0.9rem;">${currentTheme.title}</div>
+                            <div class="text-dark small" style="opacity: 0.8">Halo, ${userName}</div>
+                            <div class="text-muted extra-small" style="font-size: 0.75rem;">${currentTheme.subtitle}</div>
+                        </div>
+                    </div>
+                `,
+                customClass: {
+                    popup: 'glass-toast-modern',
+                    timerProgressBar: userRole === 'admin' ? 'bar-admin' : 'bar-staff'
+                }
+            });
+        @endif
     });
 </script>
+
+<style>
+    /* Base Glassmorphism */
+    .glass-toast-modern {
+        border-radius: 20px !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        box-shadow: 0 8px 32px rgba(27, 60, 83, 0.1) !important;
+        padding: 0.8rem 1.2rem !important;
+    }
+
+    .toast-role-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Pembeda Progress Bar */
+    .bar-admin {
+        background: #1b3c53 !important; /* Biru Gelap Dominan */
+        height: 4px !important;
+    }
+
+    .bar-staff {
+        background: #d2c1b6 !important; /* Warna Krem/Khaki Dominan */
+        height: 4px !important;
+    }
+
+    .extra-small {
+        line-height: 1.2;
+        display: block;
+        margin-top: 2px;
+    }
+</style>
 
 {{-- Style Tambahan --}}
 <style>

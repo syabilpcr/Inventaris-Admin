@@ -21,24 +21,23 @@ class AuthController extends Controller
     /**
      * Proses Login
      */
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+   public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
-            $request->session()->regenerate();
+    if (Auth::attempt($credentials, $request->remember)) {
+    $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard')
-                ->with('success', 'Selamat datang di Sistem Inventaris!');
-        }
-
-        return back()->withErrors([
-            'email' => 'Email atau password yang dimasukkan salah.',
-        ])->onlyInput('email');
-    }
+    return redirect()->intended('/dashboard')
+        ->with('login_success', 'Selamat bekerja, ' . Auth::user()->name);
+}
+    return back()->withErrors([
+        'email' => 'Email atau password yang dimasukkan salah.',
+    ])->onlyInput('email');
+}
 
     /**
      * Proses Register

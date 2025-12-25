@@ -199,6 +199,8 @@
         </div>
     </div>
 
+
+
     {{-- DATA ASET SECTION --}}
     <div class="row mb-4">
         <div class="col-md-4">
@@ -210,13 +212,19 @@
         <div class="col-md-4">
             <div class="info-section">
                 <h5><i class="bi bi-check-circle me-2"></i>Aset Baik</h5>
-                <p class="fw-bold fs-4 mb-0" style="color: #27ae60;">{{ $aset->where('kondisi', 'baik')->count() }} Item</p>
+                {{-- Menghitung kondisi 'Sangat Baik' dan 'Baik' --}}
+                <p class="fw-bold fs-4 mb-0" style="color: #27ae60;">
+                    {{ $aset->whereIn('kondisi', ['Sangat Baik', 'Baik'])->count() }} Item
+                </p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="info-section">
                 <h5><i class="bi bi-exclamation-triangle me-2"></i>Perlu Perbaikan</h5>
-                <p class="fw-bold fs-4 mb-0" style="color: #e67e22;">{{ $aset->whereIn('kondisi', ['rusak_ringan', 'rusak_berat'])->count() }} Item</p>
+                {{-- Menghitung kondisi 'Rusak Ringan' dan 'Rusak Berat' --}}
+                <p class="fw-bold fs-4 mb-0" style="color: #e67e22;">
+                    {{ $aset->whereIn('kondisi', ['Rusak Ringan', 'Rusak Berat'])->count() }} Item
+                </p>
             </div>
         </div>
     </div>
@@ -245,152 +253,194 @@
             <i class="bi bi-exclamation-circle me-2"></i> {{ session('error') }}
         </div>
         @endif
-
         <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>NO</th>
-                        <th>FOTO</th>
-                        <th>Kode Aset</th>
-                        <th>Nama Aset</th>
-                        <th>Kategori</th>
-                        <th>Tanggal Perolehan</th>
-                        <th>Nilai Perolehan</th>
-                        <th>Kondisi</th>
-                        <th style="width: 120px">Aksi</th>
-                    </tr>
-                </thead>
+            <form method="GET" action="{{ route('aset.index') }}" class="mb-3">
+                <div class="row g-2">
+                    <div class="col-md-2">
+                        <select name="kategori" class="form-select" onchange="this.form.submit()">
+                            <option value="">Semua Kategori</option>
+                            @foreach($kategoris as $kat)
+                            <option value="{{ $kat->kategori_id }}" {{ request('kategori') == $kat->kategori_id ? 'selected' : '' }}>
+                                {{ $kat->nama }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <tbody>
-                    @php $counter = 1; @endphp
-                    @if($aset->count() > 0)
-                    @foreach ($aset as $item)
-                    <tr>
-                        <td class="fw-bold" style="color: #1b3c53;">{{ $counter++ }}</td>
-                        {{-- KOLOM FOTO ASET --}}
-                        <td>
-                            @php
-                            // Mengambil foto pertama dari relasi media
-                            $fotoUtama = $item->media->where('ref_table', 'aset')->first();
-                            @endphp
+                    <div class="col-md-2">
+                        <select name="kondisi" class="form-select" onchange="this.form.submit()">
+                            <option value="">Semua Kondisi</option>
+                            <option value="Sangat Baik" {{ request('kondisi') == 'Sangat Baik' ? 'selected' : '' }}>Sangat Baik</option>
+                            <option value="Baik" {{ request('kondisi') == 'Baik' ? 'selected' : '' }}>Baik</option>
+                            <option value="Rusak Berat" {{ request('kondisi') == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat</option>
+                        </select>
+                    </div>
 
-                            @if($fotoUtama)
-                            <img src="{{ asset('storage/' . $fotoUtama->file_name) }}"
-                                class="asset-img"
-                                alt="{{ $item->nama_aset }}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#imageModal{{ $item->aset_id }}"
-                                style="cursor: pointer;">
-                            @else
-                            <div class="asset-img-placeholder">
-                                <i class="bi bi-image" style="font-size: 1.5rem;"></i>
-                            </div>
-                            @endif
-                        </td>
-                        <td style="color: #456882; font-weight: 600;">{{ $item->kode_aset }}</td>
-                        <td style="color: #1b3c53; font-weight: 500;">{{ $item->nama_aset }}</td>
-                        <td>
-                            @if($item->kategori)
-                            <span class="kategori-badge">
-                                {{ $item->kategori->nama }}
-                            </span>
-                            @else
-                            <span class="kategori-badge" style="background: #f8d7da; color: #721c24;">
-                                Kategori Dihapus
-                            </span>
-                            @endif
-                        </td>
-                        <td>{{ \Carbon\Carbon::parse($item->tgl_perolehan)->format('d M Y') }}</td>
-                        <td style="color: #1b3c53; font-weight: 600;">Rp {{ number_format($item->nilai_perolehan, 0, ',', '.') }}</td>
-                        <td>
-                            @php
-                            $badgeClass = 'bg-secondary';
-                            $kondisiText = 'Tidak Diketahui';
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="Cari Nama atau Kode Aset...">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                            switch($item->kondisi) {
-                            case 'Sangat Baik':
-                            $badgeClass = 'bg-success';
-                            $kondisiText = 'Sangat Baik';
-                            break;
-                            case 'Baik':
-                            $badgeClass = 'bg-warning text-dark';
-                            $kondisiText = 'Baik';
-                            break;
-                            case 'Rusak Ringan':
-                            $badgeClass = 'bg-danger';
-                            $kondisiText = 'Rusak Ringan';
-                            break;
-                            case 'Rusak Berat':
-                            $badgeClass = 'bg-info';
-                            $kondisiText = 'Rusak Berat';
-                            break;
-                            }
-                            @endphp
-                            <span class="badge {{ $badgeClass }} badge-kondisi">
-                                {{ $kondisiText }}
-                            </span>
-                        </td>
+                    <div class="col-md-1">
+                        <a href="{{ route('aset.index') }}" class="btn btn-outline-secondary">Reset</a>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-hover">
 
-                        <td>
-                            <div class="action-buttons">
-                                <a href="{{ route('aset.edit', $item->aset_id) }}" class="btn-edit" title="Edit Aset">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>FOTO</th>
+                            <th>Kode Aset</th>
+                            <th>Nama Aset</th>
+                            <th>Kategori</th>
+                            <th>Tanggal Perolehan</th>
+                            <th>Nilai Perolehan</th>
+                            <th>Kondisi</th>
+                            <th style="width: 120px">Aksi</th>
+                        </tr>
+                    </thead>
 
-                                <form action="{{ route('aset.destroy', $item->aset_id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-delete" title="Hapus Aset"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset {{ $item->nama_aset }}?')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                    @else
-                    <tr>
-                        <td colspan="9" class="text-center py-4">
-                            <div class="d-flex flex-column align-items-center">
-                                <i class="bi bi-inbox" style="font-size: 3rem; color: #d2c1b6; margin-bottom: 1rem;"></i>
-                                <h5 style="color: #1b3c53;">Belum Ada Data Aset</h5>
-                                <p class="text-muted">Silakan tambah aset pertama Anda</p>
-                                <a href="{{ route('aset.create') }}" class="btn btn-primary-custom mt-2">
-                                    <i class="bi bi-plus-circle me-1"></i> Tambah Aset Pertama
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
+                    <tbody>
+                        @php $counter = 1; @endphp
+                        @if($aset->count() > 0)
+                        @foreach ($aset as $item)
+                        <tr>
+                            <td class="fw-bold" style="color: #1b3c53;">{{ $counter++ }}</td>
+                            {{-- KOLOM FOTO ASET --}}
+                            <td>
+                                @php
+                                // Mengambil foto pertama dari relasi media
+                                $fotoUtama = $item->media->where('ref_table', 'aset')->first();
+                                @endphp
+
+                                @if($fotoUtama)
+                                <img src="{{ asset('storage/' . $fotoUtama->file_name) }}"
+                                    class="asset-img"
+                                    alt="{{ $item->nama_aset }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#imageModal{{ $item->aset_id }}"
+                                    style="cursor: pointer;">
+                                @else
+                                <div class="asset-img-placeholder">
+                                    <i class="bi bi-image" style="font-size: 1.5rem;"></i>
+                                </div>
+                                @endif
+                            </td>
+                            <td style="color: #456882; font-weight: 600;">{{ $item->kode_aset }}</td>
+                            <td style="color: #1b3c53; font-weight: 500;">{{ $item->nama_aset }}</td>
+                            <td>
+                                @if($item->kategori)
+                                <span class="kategori-badge">
+                                    {{ $item->kategori->nama }}
+                                </span>
+                                @else
+                                <span class="kategori-badge" style="background: #f8d7da; color: #721c24;">
+                                    Kategori Dihapus
+                                </span>
+                                @endif
+                            </td>
+                            <td>{{ \Carbon\Carbon::parse($item->tgl_perolehan)->format('d M Y') }}</td>
+                            <td style="color: #1b3c53; font-weight: 600;">Rp {{ number_format($item->nilai_perolehan, 0, ',', '.') }}</td>
+                            <td>
+                                @php
+                                $badgeClass = 'bg-secondary';
+                                $kondisiText = 'Tidak Diketahui';
+
+                                switch($item->kondisi) {
+                                case 'Sangat Baik':
+                                $badgeClass = 'bg-success';
+                                $kondisiText = 'Sangat Baik';
+                                break;
+                                case 'Baik':
+                                $badgeClass = 'bg-warning text-dark';
+                                $kondisiText = 'Baik';
+                                break;
+                                case 'Rusak Ringan':
+                                $badgeClass = 'bg-danger';
+                                $kondisiText = 'Rusak Ringan';
+                                break;
+                                case 'Rusak Berat':
+                                $badgeClass = 'bg-info';
+                                $kondisiText = 'Rusak Berat';
+                                break;
+                                }
+                                @endphp
+                                <span class="badge {{ $badgeClass }} badge-kondisi">
+                                    {{ $kondisiText }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ route('aset.edit', $item->aset_id) }}" class="btn-edit" title="Edit Aset">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <form action="{{ route('aset.destroy', $item->aset_id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-delete" title="Hapus Aset"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus aset {{ $item->nama_aset }}?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                        @else
+                        <tr>
+                            <td colspan="9" class="text-center py-4">
+                                <div class="d-flex flex-column align-items-center">
+                                    <i class="bi bi-inbox" style="font-size: 3rem; color: #d2c1b6; margin-bottom: 1rem;"></i>
+                                    <h5 style="color: #1b3c53;">Belum Ada Data Aset</h5>
+                                    <p class="text-muted">Silakan tambah aset pertama Anda</p>
+                                    <a href="{{ route('aset.create') }}" class="btn btn-primary-custom mt-2">
+                                        <i class="bi bi-plus-circle me-1"></i> Tambah Aset Pertama
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        @endif
+                    </tbody>
+
+                </table>
+
+            </div>
+            <!-- PAGINATION DISINI -->
+            <div class="mt-3">
+                {{ $aset->links('pagination::bootstrap-5') }}
+            </div>
         </div>
-        <!-- PAGINATION DISINI -->
     </div>
-</div>
 
-<script>
-    // Konfirmasi sebelum menghapus
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteForms = document.querySelectorAll('form[action*="destroy"]');
+    <script>
+        // Konfirmasi sebelum menghapus
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteForms = document.querySelectorAll('form[action*="destroy"]');
 
-        deleteForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                const assetName = this.closest('tr').querySelector('td:nth-child(4)').textContent;
-                if (!confirm(`Apakah Anda yakin ingin menghapus aset "${assetName}"? Tindakan ini tidak dapat dibatalkan.`)) {
-                    e.preventDefault();
-                }
+            deleteForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const assetName = this.closest('tr').querySelector('td:nth-child(4)').textContent;
+                    if (!confirm(`Apakah Anda yakin ingin menghapus aset "${assetName}"? Tindakan ini tidak dapat dibatalkan.`)) {
+                        e.preventDefault();
+                    }
+                });
             });
         });
-    });
 
-    // Tooltip untuk aksi
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-    tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-</script>
+        // Tooltip untuk aksi
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    </script>
 
-@endsection
+    @endsection

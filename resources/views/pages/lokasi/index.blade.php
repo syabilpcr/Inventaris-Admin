@@ -237,6 +237,39 @@
         </div>
         @endif
 
+        <form method="GET" action="{{ route('lokasi-aset.index') }}" class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <select name="rt" class="form-select" onchange="this.form.submit()" style="border-radius: 10px;">
+                        <option value="">Semua RT</option>
+                        @for($i=1; $i<=10; $i++)
+                            <option value="{{ sprintf('%02d', $i) }}" {{ request('rt') == sprintf('%02d', $i) ? 'selected' : '' }}>RT {{ sprintf('%02d', $i) }}</option>
+                            @endfor
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="rw" class="form-select" onchange="this.form.submit()" style="border-radius: 10px;">
+                        <option value="">Semua RW</option>
+                        @for($i=1; $i<=10; $i++)
+                            <option value="{{ sprintf('%02d', $i) }}" {{ request('rw') == sprintf('%02d', $i) ? 'selected' : '' }}>RW {{ sprintf('%02d', $i) }}</option>
+                            @endfor
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" value="{{ request('search') }}"
+                            placeholder="Cari Nama Aset atau Alamat..." style="border-radius: 10px 0 0 10px;">
+                        <button type="submit" class="btn btn-primary-custom" style="border-radius: 0 10px 10px 0;">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <a href="{{ route('lokasi-aset.index') }}" class="btn btn-outline-secondary" style="border-radius: 10px;">Reset</a>
+                </div>
+            </div>
+        </form>
+
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -262,12 +295,12 @@
                             @endphp
 
                             @if($photo)
-                            <img src="{{ asset('storage/' . $photo->file_name) }}" 
-                                 class="asset-img" 
-                                 alt="Foto Lokasi"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#imageModal{{ $item->lokasi_id }}">
-                            
+                            <img src="{{ asset('storage/' . $photo->file_name) }}"
+                                class="asset-img"
+                                alt="Foto Lokasi"
+                                data-bs-toggle="modal"
+                                data-bs-target="#imageModal{{ $item->lokasi_id }}">
+
                             {{-- Modal Zoom Image --}}
                             <div class="modal fade" id="imageModal{{ $item->lokasi_id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -310,8 +343,8 @@
                                 <form action="{{ route('lokasi-aset.destroy', $item->lokasi_id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-delete btn-confirm-delete" 
-                                            data-name="{{ $item->lokasi_text }}" title="Hapus Lokasi">
+                                    <button type="submit" class="btn-delete btn-confirm-delete"
+                                        data-name="{{ $item->lokasi_text }}" title="Hapus Lokasi">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -334,6 +367,14 @@
                     @endforelse
                 </tbody>
             </table>
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                    Menampilkan {{ $locations->firstItem() }} sampai {{ $locations->lastItem() }} dari {{ $locations->total() }} data
+                </div>
+                <div>
+                    {{ $locations->links('pagination::bootstrap-5') }}
+                </div>
+            </div>
         </div>
     </div>
 </div>

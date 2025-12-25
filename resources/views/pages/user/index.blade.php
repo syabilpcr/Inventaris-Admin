@@ -10,18 +10,94 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    /* Header Styling */
     .page-header-custom {
         background: linear-gradient(135deg, #1b3c53, #456882);
         border-radius: 20px;
-        padding: 35px 40px;
+        padding: 30px 40px;
         color: white;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         box-shadow: 0 8px 25px rgba(27, 60, 83, 0.15);
     }
 
+    /* Developer Identity Card - UKURAN DIPERBESAR */
+    .dev-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        display: flex;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        border: 1px solid #e9e1d9;
+    }
+
+    .dev-image-side {
+        width: 250px;
+        background: #1b3c53;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+    }
+
+    .dev-img {
+        width: 180px;
+        height: 180px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 5px solid rgba(255, 255, 255, 0.15);
+        transition: transform 0.3s ease;
+    }
+
+    .dev-card:hover .dev-img {
+        transform: scale(1.05);
+    }
+
+    .dev-info-side {
+        flex: 1;
+        padding: 35px 40px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .dev-badge {
+        position: absolute;
+        top: 25px;
+        right: 30px;
+        background: rgba(27, 60, 83, 0.08);
+        color: #1b3c53;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Social Links - SEKARANG MENGGUNAKAN SPAN (TIDAK BISA DIKLIK) */
+    .social-links span {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        margin-right: 8px;
+        transition: all 0.3s;
+        font-size: 1.2rem;
+        cursor: default;
+    }
+
+    .social-linkedin { background: #e8f2f8; color: #0077b5; }
+    .social-github { background: #f0f0f0; color: #333; }
+    .social-instagram { background: #fdf0f2; color: #e4405f; }
+
+    /* Table & Cards */
     .card-soft {
         background: white;
         border-radius: 18px;
@@ -30,238 +106,221 @@
         border: 1px solid #e9e1d9;
     }
 
+    .info-section {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #456882;
+    }
+
     .table th {
         background: linear-gradient(135deg, #1b3c53, #456882) !important;
         color: white;
-        vertical-align: middle;
-        border: none;
-        padding: 16px 12px;
-        font-weight: 600;
-        font-size: 0.9rem;
+        padding: 15px;
+        font-size: 0.85rem;
     }
 
-    .table td {
-        vertical-align: middle;
-        background: white;
-        padding: 14px 12px;
-        border-bottom: 1px solid #f0f0f0;
+    /* CUSTOM ACTION BUTTONS (SESUAI GAMBAR) */
+    .btn-custom-edit {
+        background: #d2c1b6 !important;
+        color: #1b3c53 !important;
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .btn-custom-delete {
+        background: #e74c3c !important;
+        color: white !important;
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .btn-custom-edit:hover, .btn-custom-delete:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .user-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 10px;
     }
 
     .btn-primary-custom {
         background: linear-gradient(135deg, #1b3c53, #456882);
         border: none;
-        padding: 12px 24px;
-        border-radius: 12px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        color: white;
         font-weight: 600;
-        transition: all 0.3s ease;
-        color: white;
         text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-primary-custom:hover {
-        background: linear-gradient(135deg, #456882, #1b3c53);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(69, 104, 130, 0.3);
-        color: white;
-    }
-
-    .btn-edit {
-        background: #d2c1b6;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 8px;
-        color: #1b3c53;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-edit:hover {
-        background: #456882;
-        color: white;
-    }
-
-    .btn-delete {
-        background: #e74c3c;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 8px;
-        color: white;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-delete:hover {
-        background: #c0392b;
-    }
-
-    .info-section {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border-left: 4px solid #456882;
-    }
-
-    .user-img {
-        width: 45px;
-        height: 45px;
-        object-fit: cover;
-        border-radius: 12px;
-        border: 2px solid #e9e1d9;
-    }
-
-    .user-img-placeholder {
-        width: 45px;
-        height: 45px;
-        border-radius: 12px;
-        background: rgba(210, 193, 182, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #1b3c53;
-        font-weight: bold;
-        font-size: 0.8rem;
     }
 
     .role-badge {
-        padding: 6px 12px;
-        border-radius: 10px;
-        font-size: 0.75rem;
+        padding: 5px 10px;
+        border-radius: 8px;
+        font-size: 0.7rem;
         font-weight: 600;
-        text-transform: uppercase;
     }
 
     .role-admin { background: rgba(27, 60, 83, 0.1); color: #1b3c53; }
     .role-staff { background: rgba(69, 104, 130, 0.1); color: #456882; }
 
-    .table-responsive {
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #e9e1d9;
-    }
-
-    /* Animasi */
-    .animate-up {
-        animation: fadeInUp 0.5s ease-out forwards;
-    }
-
+    /* Animations */
+    .animate-up { animation: fadeInUp 0.5s ease-out forwards; }
     @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
+        from { opacity: 0; transform: translateY(15px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+        .dev-card { flex-direction: column; }
+        .dev-image-side { width: 100%; padding: 40px; }
+        .dev-info-side { text-align: center; padding: 30px; }
+        .dev-badge { position: static; margin-bottom: 15px; display: inline-block; }
+        .social-links { justify-content: center; display: flex; }
     }
 </style>
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 mt-4">
 
     {{-- HEADER --}}
     <div class="page-header-custom animate-up">
         <div>
-            <h2 class="fw-bold mb-2">Manajemen User</h2>
-            <p class="mb-0 opacity-75">Kelola data pengguna dan kontrol akses sistem</p>
+            <h2 class="fw-bold mb-1">Manajemen User</h2>
+            <p class="mb-0 opacity-75 small">Kelola data pengguna dan kontrol akses sistem</p>
         </div>
-        <div>
-            <i class="bi bi-people" style="font-size: 55px; opacity: .85;"></i>
+        <i class="bi bi-people d-none d-md-block" style="font-size: 45px; opacity: .8;"></i>
+    </div>
+
+    {{-- DEVELOPER IDENTITY CARD (ENLARGED) --}}
+    <div class="dev-card animate-up" style="animation-delay: 0.1s;">
+        <div class="dev-image-side">
+            <img src="{{ asset('images/Foto_Kader.jpg') }}" class="dev-img shadow-lg" alt="Dev Photo">
+        </div>
+        <div class="dev-info-side">
+            <span class="dev-badge">System Developer</span>
+            <h2 class="fw-bold mb-2" style="color: #1b3c53; letter-spacing: -0.5px;">Muhammad Syabil Al Jabbar</h2>
+            <p class="text-muted mb-4 fs-5">
+                <span class="badge bg-light text-dark border me-2">
+                    <i class="bi bi-hash me-1" style="color: #1b3c53;"></i> 2457301098
+                </span>
+                <span class="badge bg-light text-dark border me-2">
+                    <i class="bi bi-mortarboard me-1" style="color: #1b3c53;"></i> Sistem Informasi
+                </span>
+                <span class="badge bg-light text-dark border">
+                    <i class="bi bi-building-fill me-1" style="color: #1b3c53;"></i> Politeknik Caltex Riau
+                </span>
+            </p>
+            
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-auto">
+                {{-- SOCIAL LINKS MENGGUNAKAN SPAN --}}
+                <div class="social-links">
+                    <span class="social-linkedin" title="LinkedIn"><i class="bi bi-linkedin"></i></span>
+                    <span class="social-github" title="GitHub"><i class="bi bi-github"></i></span>
+                    <span class="social-instagram" title="Instagram"><i class="bi bi-instagram"></i></span>
+                </div>
+                <div class="text-muted fw-medium">
+                    <i class="bi bi-geo-alt-fill text-danger me-1"></i> Pekanbaru, Riau
+                </div>
+            </div>
         </div>
     </div>
 
-    {{-- STATISTICS SECTION --}}
-    <div class="row mb-4 animate-up" style="animation-delay: 0.1s;">
+    {{-- STATISTICS --}}
+    <div class="row mb-2 animate-up" style="animation-delay: 0.15s;">
         <div class="col-md-4">
             <div class="info-section">
-                <h5 class="fw-bold mb-1"><i class="bi bi-person-circle me-2"></i>Total User</h5>
-                <p class="text-muted small mb-2">Seluruh akun terdaftar</p>
-                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->count() }} <span class="fs-6 fw-normal">Orang</span></h3>
+                <h6 class="fw-bold mb-1"><i class="bi bi-person-circle me-2"></i>Total User</h6>
+                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->count() }} <span class="fs-6 fw-normal text-muted">Orang</span></h3>
             </div>
         </div>
         <div class="col-md-4">
             <div class="info-section" style="border-left-color: #1b3c53;">
-                <h5 class="fw-bold mb-1"><i class="bi bi-shield-check me-2"></i>Administrator</h5>
-                <p class="text-muted small mb-2">User dengan akses penuh</p>
-                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->where('role', 'admin')->count() }} <span class="fs-6 fw-normal">Akun</span></h3>
+                <h6 class="fw-bold mb-1"><i class="bi bi-shield-check me-2"></i>Admin</h6>
+                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->where('role', 'admin')->count() }} <span class="fs-6 fw-normal text-muted">Akun</span></h3>
             </div>
         </div>
         <div class="col-md-4">
             <div class="info-section" style="border-left-color: #d2c1b6;">
-                <h5 class="fw-bold mb-1"><i class="bi bi-person-badge me-2"></i>Staff / User</h5>
-                <p class="text-muted small mb-2">User dengan akses terbatas</p>
-                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->where('role', '!=', 'admin')->count() }} <span class="fs-6 fw-normal">Akun</span></h3>
+                <h6 class="fw-bold mb-1"><i class="bi bi-person-badge me-2"></i>Staff</h6>
+                <h3 class="fw-bold mb-0" style="color: #1b3c53;">{{ $users->where('role', '!=', 'admin')->count() }} <span class="fs-6 fw-normal text-muted">Akun</span></h3>
             </div>
         </div>
     </div>
 
-    {{-- CARD CONTENT --}}
+    {{-- MAIN TABLE CARD --}}
     <div class="card-soft animate-up" style="animation-delay: 0.2s;">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold mb-0" style="color: #1b3c53;">
+            <h5 class="fw-bold mb-0" style="color: #1b3c53;">
                 <i class="bi bi-person-lines-fill me-2"></i> Daftar Pengguna
-            </h4>
-            <a href="{{ route('user.create') }}" class="btn btn-primary-custom">
+            </h5>
+            <a href="{{ route('user.create') }}" class="btn btn-primary-custom shadow-sm">
                 <i class="bi bi-person-plus-fill me-2"></i> Tambah User
             </a>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive shadow-sm" style="border-radius: 12px; border: 1px solid #e9e1d9;">
             <table class="table table-hover mb-0">
                 <thead>
-                    <tr>
-                        <th class="text-center" width="70">NO</th>
+                    <tr class="text-center">
+                        <th width="60">NO</th>
                         <th width="80">FOTO</th>
-                        <th>NAMA LENGKAP</th>
-                        <th>EMAIL</th>
-                        <th class="text-center">ROLE</th>
-                        <th class="text-center" width="150">AKSI</th>
+                        <th class="text-start">NAMA LENGKAP</th>
+                        <th class="text-start">EMAIL</th>
+                        <th>ROLE</th>
+                        <th width="120">AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($users as $user)
-                    <tr>
-                        <td class="text-center fw-bold" style="color: #1b3c53;">{{ $loop->iteration }}</td>
+                    <tr class="text-center align-middle">
+                        <td class="fw-bold">{{ $loop->iteration }}</td>
                         <td>
-                            @if($user->profile_picture)
-                                <img src="{{ asset('storage/' . $user->profile_picture) }}" class="user-img shadow-sm" alt="Profile">
+                            @if($user->profile_picture && Storage::disk('public')->exists($user->profile_picture))
+                            <img src="{{ asset('storage/' . $user->profile_picture) }}" class="user-img shadow-sm" alt="Profile">
                             @else
-                                <div class="user-img-placeholder shadow-sm">
-                                    {{ strtoupper(substr($user->name, 0, 2)) }}
-                                </div>
+                            <img src="{{ asset('images/Foto_profil.jpg') }}" class="user-img shadow-sm" alt="Default">
                             @endif
                         </td>
-                        <td>
+                        <td class="text-start">
                             <div class="fw-bold" style="color: #1b3c53;">{{ $user->name }}</div>
                             @if(auth()->id() == $user->id)
-                                <span class="badge bg-success" style="font-size: 0.6rem;">SAYA</span>
+                            <span class="badge bg-success" style="font-size: 0.6rem;">SAYA</span>
                             @endif
                         </td>
-                        <td style="color: #456882;">{{ $user->email }}</td>
-                        <td class="text-center">
+                        <td class="text-start" style="color: #456882; font-size: 0.9rem;">{{ $user->email }}</td>
+                        <td>
                             <span class="role-badge {{ $user->role == 'admin' ? 'role-admin' : 'role-staff' }}">
-                                <i class="bi {{ $user->role == 'admin' ? 'bi-shield-shaded' : 'bi-person' }} me-1"></i>
-                                {{ $user->role }}
+                                {{ strtoupper($user->role) }}
                             </span>
                         </td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('user.edit', $user->id) }}" 
-                                   class="btn-edit" title="Edit User">
+                                {{-- EDIT BUTTON (KREM) --}}
+                                <a href="{{ route('user.edit', $user->id) }}" class="btn-custom-edit" title="Edit">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-
+                                {{-- DELETE BUTTON (MERAH) --}}
                                 @if(auth()->id() != $user->id)
-                                <form action="{{ route('user.destroy', $user->id) }}" 
-                                      method="POST" class="delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn-delete btn-delete-trigger" 
-                                            data-name="{{ $user->name }}" 
-                                            title="Hapus User">
+                                <form action="{{ route('user.destroy', $user->id) }}" method="POST">
+                                    @csrf @method('DELETE')
+                                    <button type="button" class="btn-custom-delete btn-delete-trigger" data-name="{{ $user->name }}">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -272,8 +331,8 @@
                     @empty
                     <tr>
                         <td colspan="6" class="text-center py-5">
-                            <i class="bi bi-people text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
-                            <h5 class="mt-3 text-muted">Belum ada pengguna terdaftar.</h5>
+                            <i class="bi bi-people text-muted" style="font-size: 3rem; opacity: 0.2;"></i>
+                            <p class="text-muted mt-2">Belum ada data pengguna.</p>
                         </td>
                     </tr>
                     @endforelse
@@ -283,54 +342,40 @@
     </div>
 </div>
 
-{{-- Scripts --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Toast Alert untuk Success Session
         @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: "{{ session('success') }}",
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true
-            });
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
         @endif
 
-        // 2. SweetAlert Konfirmasi Hapus
         const deleteButtons = document.querySelectorAll('.btn-delete-trigger');
         deleteButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 const form = this.closest('form');
                 const name = this.getAttribute('data-name');
-
                 Swal.fire({
                     title: 'Hapus User?',
-                    text: `Akun "${name}" akan dihapus permanen dari sistem.`,
+                    text: `Akun "${name}" akan dihapus permanen.`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#1b3c53',
                     cancelButtonColor: '#e74c3c',
                     confirmButtonText: 'Ya, Hapus!',
-                    cancelButtonText: 'Batal',
-                    reverseButtons: true,
-                    borderRadius: '15px'
+                    reverseButtons: true
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
+                    if (result.isConfirmed) form.submit();
                 });
             });
-        });
-
-        // 3. Tooltip
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
 </script>

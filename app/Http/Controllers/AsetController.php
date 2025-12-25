@@ -10,11 +10,20 @@ use Illuminate\Support\Facades\Storage;
 
 class AsetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Menggunakan eager loading (with) agar lebih cepat
-        $aset = Aset::with('kategori')->get();
-        return view('pages.aset.index', compact('aset'));
+        // Mengambil kategori untuk isi dropdown filter
+        $kategoris = \App\Models\KategoriAset::all();
+
+        // Query aset dengan Filter dan Search
+        $aset = Aset::with('kategori')
+            ->filter($request)
+            ->search($request)
+            ->latest()
+            ->Paginate(10)
+            ->withQueryString(); // Menjaga filter tetap aktif saat pindah halaman
+
+        return view('pages.aset.index', compact('aset', 'kategoris'));
     }
 
     public function create()

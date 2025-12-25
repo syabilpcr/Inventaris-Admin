@@ -10,11 +10,28 @@ class KategoriAsetController extends Controller
     /**
      * Menampilkan daftar semua kategori.
      */
-    public function index()
-    {
-        $kategoris = KategoriAset::all();
-        return view('pages.kategori.index', compact('kategoris'));
-    }
+    public function index(Request $request)
+{
+    // Mengambil parameter dari URL dengan default value
+    $search = $request->get('search');
+    $sort = $request->get('sort', 'created_at'); // Default urut berdasarkan tgl dibuat
+    $order = $request->get('order', 'desc');    // Default urutan terbaru (desc)
+
+    $kategoris = KategoriAset::query()
+        // Fungsi Search
+        ->when($search, function ($query) use ($search) {
+            return $query->where('nama', 'LIKE', "%{$search}%")
+                         ->orWhere('kode', 'LIKE', "%{$search}%")
+                         ->orWhere('deskripsi', 'LIKE', "%{$search}%");
+        })
+        // Fungsi Sort
+        ->orderBy($sort, $order)
+        // Fungsi Pagination
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('pages.kategori.index', compact('kategoris'));
+}
 
     /**
      * Menampilkan form untuk membuat kategori baru (biasanya di modal).

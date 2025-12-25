@@ -8,9 +8,16 @@ use Illuminate\Http\Request;
 
 class MutasiAsetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $mutasi = MutasiAset::with('aset')->latest()->get();
+       
+        $mutasi = MutasiAset::with('aset')
+            ->search($request)
+            ->filter($request)
+            ->latest('tanggal')
+            ->paginate(10)
+            ->withQueryString(); 
+
         return view('pages.mutasi.index', compact('mutasi'));
     }
 

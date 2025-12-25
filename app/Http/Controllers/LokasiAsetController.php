@@ -10,11 +10,17 @@ use Illuminate\Support\Facades\Storage;
 
 class LokasiAsetController extends Controller
 {
-    public function index()
-    {
-        $locations = LokasiAset::with('aset')->get();
-        return view('pages.lokasi.index', compact('locations'));
-    }
+   public function index(Request $request)
+{
+    $locations = LokasiAset::with(['aset', 'media'])
+        ->filter($request)
+        ->search($request)
+        ->latest()
+        ->paginate(10) // Identik dengan aset
+        ->withQueryString();
+
+    return view('pages.lokasi.index', compact('locations'));
+}
 
     public function create()
     {
