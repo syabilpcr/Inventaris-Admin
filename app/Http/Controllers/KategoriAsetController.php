@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KategoriAset;
 use Illuminate\Http\Request;
-
+ use Carbon\Carbon; // Pastikan import ini ada di bagian atas file
 class KategoriAsetController extends Controller
 {
     /**
@@ -78,21 +78,28 @@ class KategoriAsetController extends Controller
     /**
      * Memperbarui kategori di database.
      */
-    public function update(Request $request, $id)
-    {
-        $kategori = KategoriAset::findOrFail($id);
 
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'kode' => 'required|string|unique:kategori_aset,kode,' . $id . ',kategori_id',
-            'deskripsi' => 'nullable|string',
-        ]);
+public function update(Request $request, $id)
+{
+    $kategori = KategoriAset::findOrFail($id);
 
-        $kategori->update($request->all());
+    $request->validate([
+        'nama' => 'required|string|max:255',
+        'kode' => 'required|string|unique:kategori_aset,kode,' . $id . ',kategori_id',
+        'deskripsi' => 'nullable|string',
+    ]);
 
-        return redirect()->route('kategori-aset.index')
-            ->with('success', 'Kategori aset berhasil diperbarui!');
-    }
+    // Ambil semua data input
+    $data = $request->all();
+    
+    // Paksa update kolom updated_at dengan waktu Jakarta sekarang
+    $kategori->updated_at = Carbon::now('Asia/Jakarta');
+    $kategori->fill($data);
+    $kategori->save();
+
+    return redirect()->route('kategori-aset.index')
+        ->with('success', 'Kategori aset berhasil diperbarui pada ' . Carbon::now('Asia/Jakarta')->format('H:i:s'));
+}
 
     /**
      * Menghapus kategori dari database.
