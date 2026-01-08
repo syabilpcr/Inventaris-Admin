@@ -22,7 +22,7 @@
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
 
-            @if(auth()->user()->role == 'staff')
+            @if(auth()->user()->role == 'admin')
             <a href="{{ route('user.index') }}" class="nav-item {{ request()->is('user*') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> Manajemen User
             </a>
