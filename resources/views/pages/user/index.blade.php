@@ -279,8 +279,10 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center mt-auto">
                 {{-- SOCIAL LINKS MENGGUNAKAN SPAN --}}
                 <div class="social-links">
-                    <span class="social-linkedin" title="LinkedIn"><i class="bi bi-linkedin"></i></span>
-                    <span class="social-github" title="GitHub"><i class="bi bi-github"></i></span>
+                
+                    <a href="https://github.com/USERNAME_GITHUB_ANDA" target="_blank" class="social-github" title="GitHub">
+                        <i class="bi bi-github"></i>
+                    </a>
 
                     <a href="https://www.instagram.com/syabil.ajbr" target="_blank" class="social-instagram" title="Instagram">
                         <i class="bi bi-instagram"></i>
