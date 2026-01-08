@@ -93,9 +93,20 @@
         cursor: default;
     }
 
-    .social-linkedin { background: #e8f2f8; color: #0077b5; }
-    .social-github { background: #f0f0f0; color: #333; }
-    .social-instagram { background: #fdf0f2; color: #e4405f; }
+    .social-linkedin {
+        background: #e8f2f8;
+        color: #0077b5;
+    }
+
+    .social-github {
+        background: #f0f0f0;
+        color: #333;
+    }
+
+    .social-instagram {
+        background: #fdf0f2;
+        color: #e4405f;
+    }
 
     /* Table & Cards */
     .card-soft {
@@ -149,9 +160,10 @@
         transition: all 0.3s;
     }
 
-    .btn-custom-edit:hover, .btn-custom-delete:hover {
+    .btn-custom-edit:hover,
+    .btn-custom-delete:hover {
         transform: translateY(-3px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .user-img {
@@ -178,22 +190,58 @@
         font-weight: 600;
     }
 
-    .role-admin { background: rgba(27, 60, 83, 0.1); color: #1b3c53; }
-    .role-staff { background: rgba(69, 104, 130, 0.1); color: #456882; }
+    .role-admin {
+        background: rgba(27, 60, 83, 0.1);
+        color: #1b3c53;
+    }
+
+    .role-staff {
+        background: rgba(69, 104, 130, 0.1);
+        color: #456882;
+    }
 
     /* Animations */
-    .animate-up { animation: fadeInUp 0.5s ease-out forwards; }
+    .animate-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
     @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(15px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     @media (max-width: 768px) {
-        .dev-card { flex-direction: column; }
-        .dev-image-side { width: 100%; padding: 40px; }
-        .dev-info-side { text-align: center; padding: 30px; }
-        .dev-badge { position: static; margin-bottom: 15px; display: inline-block; }
-        .social-links { justify-content: center; display: flex; }
+        .dev-card {
+            flex-direction: column;
+        }
+
+        .dev-image-side {
+            width: 100%;
+            padding: 40px;
+        }
+
+        .dev-info-side {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .dev-badge {
+            position: static;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .social-links {
+            justify-content: center;
+            display: flex;
+        }
     }
 </style>
 
@@ -227,13 +275,16 @@
                     <i class="bi bi-building-fill me-1" style="color: #1b3c53;"></i> Politeknik Caltex Riau
                 </span>
             </p>
-            
+
             <div class="d-flex flex-wrap justify-content-between align-items-center mt-auto">
                 {{-- SOCIAL LINKS MENGGUNAKAN SPAN --}}
                 <div class="social-links">
                     <span class="social-linkedin" title="LinkedIn"><i class="bi bi-linkedin"></i></span>
                     <span class="social-github" title="GitHub"><i class="bi bi-github"></i></span>
-                    <span class="social-instagram" title="Instagram"><i class="bi bi-instagram"></i></span>
+
+                    <a href="https://www.instagram.com/syabil.ajbr" target="_blank" class="social-instagram" title="Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
                 </div>
                 <div class="text-muted fw-medium">
                     <i class="bi bi-geo-alt-fill text-danger me-1"></i> Pekanbaru, Riau
