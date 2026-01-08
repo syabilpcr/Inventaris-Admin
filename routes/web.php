@@ -35,6 +35,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('pemeliharaan', PemeliharaanAsetController::class);
     Route::resource('mutasi', MutasiAsetController::class);
     Route::resource('user', UserController::class);
-
-    
 });
